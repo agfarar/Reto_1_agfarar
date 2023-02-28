@@ -66,7 +66,7 @@ def load_data(control):
     Carga los datos
     """
     #TODO: Realizar la carga de datos
-    pass
+    
 
 
 def print_data(control, id):

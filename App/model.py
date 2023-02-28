@@ -44,14 +44,14 @@ dos listas, una para los videos, otra para las categorias de los mismos.
 # Construccion de modelos
 
 
-def new_data_structs():
+def new_data_structs(list_type:str):
     """
     Inicializa las estructuras de datos del modelo. Las crea de
     manera vacía para posteriormente almacenar la información.
     """
     #TODO: Inicializar las estructuras de datos
-    pass
-
+    data_structs={"data":lt.newList(datastructure=list_type)}
+    return data_structs
 
 # Funciones para agregar informacion al modelo
 
@@ -60,8 +60,8 @@ def add_data(data_structs, data):
     Función para agregar nuevos elementos a la lista
     """
     #TODO: Crear la función para agregar elementos a una lista
-    pass
-
+    data_structs=lt.addLast(data_structs["model"]["data"],data)
+    return data_structs
 
 # Funciones para creacion de datos
 
@@ -70,7 +70,8 @@ def new_data(id, info):
     Crea una nueva estructura para modelar los datos
     """
     #TODO: Crear la función para estructurar los datos
-    pass
+    data={'id':id,'info':info}
+    return data
 
 
 # Funciones de consulta
@@ -80,7 +81,11 @@ def get_data(data_structs, id):
     Retorna un dato a partir de su ID
     """
     #TODO: Crear la función para obtener un dato de una lista
-    pass
+    pos_data=lt.isPresent(data_structs["data"],id)
+    if pos_data>0:
+        data=lt.getElement(data_structs["data"],pos_data)
+        return data
+    return None
 
 
 def data_size(data_structs):
@@ -88,8 +93,28 @@ def data_size(data_structs):
     Retorna el tamaño de la lista de datos
     """
     #TODO: Crear la función para obtener el tamaño de una lista
-    pass
+    return lt.size(data_structs["data"])
 
+def compar_fun_or_load_data(business_1, business_2): 
+    """
+    Devuelve verdadero (True) si el año de impuesto1 es menor que el de impuesto2, en caso de que sean iguales tenga en cuenta el código de la actividad económica, de lo contrario devuelva falso (False).
+    Args:
+    impuesto1: información del primer registro de impuestos que incluye el “Año” y el
+    “Código actividad económica”
+            impuesto2: información del segundo registro de impuestos que incluye el “Año” y el
+            “Código actividad económica”
+    """ 
+    if business_1["Año"] < business_2["Año"]:
+        retorno = True
+    elif business_1["Año"] == business_2["Año"]:
+        if business_1["Código actividad económica"] < business_2["Código actividad económica"]:
+           retorno = True
+        else: 
+            retorno = False
+    else:
+        retorno = False
+        
+    return retorno
 
 def req_1(data_structs):
     """
@@ -186,4 +211,6 @@ def sort(data_structs):
     Función encargada de ordenar la lista con los datos
     """
     #TODO: Crear función de ordenamiento
-    pass
+    return merg.sort(data_structs,compar_fun_or_load_data)
+
+

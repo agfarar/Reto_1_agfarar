@@ -31,32 +31,37 @@ El controlador se encarga de mediar entre la vista y el modelo.
 """
 
 
-def new_controller():
-    """
-    Crea una instancia del modelo
-    """
-    #TODO: Llamar la función del modelo que crea las estructuras de datos
-    pass
+def new_controller(list_type):
+     """
+     Crea una instancia del modelo
+     """
+     #TODO: Llamar la función del modelo que crea las estructuras de datos
+     control={'model':model.new_data_structs(list_type)}
+     return control
 
 
 # Funciones para la carga de datos
 
-def load_data(control, filename):
+def load_data(control:dict,file_name:str):
     """
     Carga los datos del reto
     """
     # TODO: Realizar la carga de datos
-    pass
-
+    raw_data = csv.DictReader(open(file_name, encoding = "utf-8"), delimiter= ",")
+    for line in raw_data:
+        model.add_data(control,line)
+    return model.data_size(control["model"])
 
 # Funciones de ordenamiento
+def compare_function_load_data():
+    pass
 
 def sort(control):
     """
     Ordena los datos del modelo
     """
     #TODO: Llamar la función del modelo para ordenar los datos
-    pass
+    
 
 
 # Funciones de consulta sobre el catálogo
@@ -147,3 +152,6 @@ def delta_time(start, end):
     """
     elapsed = float(end - start)
     return elapsed
+
+print(load_data(new_controller("ARRAY_LIST"),"Data/DIAN/Salida_agregados_renta_juridicos_AG-small.csv"))
+# print(new_controller("ARRAY_LIST"))
