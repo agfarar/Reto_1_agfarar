@@ -44,13 +44,13 @@ dos listas, una para los videos, otra para las categorias de los mismos.
 # Construccion de modelos
 
 
-def new_data_structs(list_type:str):
+def new_data_structs():
     """
     Inicializa las estructuras de datos del modelo. Las crea de
     manera vacía para posteriormente almacenar la información.
     """
     #TODO: Inicializar las estructuras de datos
-    data_structs={"data":lt.newList(datastructure=list_type)}
+    data_structs={"data":lt.newList(datastructure="ARRAY_LIST")}
     return data_structs
 
 # Funciones para agregar informacion al modelo
@@ -187,7 +187,12 @@ def compare(data_1, data_2):
     Función encargada de comparar dos datos
     """
     #TODO: Crear función comparadora de la lista
-    pass
+    if data_1["id"] > data_2["id"]:
+        return 1
+    elif data_1["id"] < data_2["id"]:
+        return -1
+    else:
+        return 0
 
 # Funciones de ordenamiento
 
@@ -203,7 +208,7 @@ def sort_criteria(data_1, data_2):
         _type_: _description_
     """
     #TODO: Crear función comparadora para ordenar
-    pass
+    return data_1["id"] > data_2["id"]
 
 
 def sort(data_structs):
@@ -211,6 +216,6 @@ def sort(data_structs):
     Función encargada de ordenar la lista con los datos
     """
     #TODO: Crear función de ordenamiento
-    return merg.sort(data_structs,compar_fun_or_load_data)
+    return quk.sort(data_structs,compar_fun_or_load_data)
 
 

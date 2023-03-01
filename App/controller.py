@@ -31,23 +31,23 @@ El controlador se encarga de mediar entre la vista y el modelo.
 """
 
 
-def new_controller(list_type):
+def new_controller():
      """
      Crea una instancia del modelo
      """
      #TODO: Llamar la función del modelo que crea las estructuras de datos
-     control={'model':model.new_data_structs(list_type)}
+     control={'model':model.new_data_structs()}
      return control
 
 
 # Funciones para la carga de datos
 
-def load_data(control:dict,file_name:str):
+def load_data(control:dict):
     """
     Carga los datos del reto
     """
     # TODO: Realizar la carga de datos
-    raw_data = csv.DictReader(open(file_name, encoding = "utf-8"), delimiter= ",")
+    raw_data = csv.DictReader(open("Data/DIAN/Salida_agregados_renta_juridicos_AG-large.csv", encoding = "utf-8"), delimiter= ",")
     for line in raw_data:
         model.add_data(control,line)
     return model.data_size(control["model"])
@@ -61,7 +61,7 @@ def sort(control):
     Ordena los datos del modelo
     """
     #TODO: Llamar la función del modelo para ordenar los datos
-    
+    return model.sort(control["data"])
 
 
 # Funciones de consulta sobre el catálogo
@@ -71,7 +71,7 @@ def get_data(control, id):
     Retorna un dato por su ID.
     """
     #TODO: Llamar la función del modelo para obtener un dato
-    pass
+    return model.get_data(control["model"],id)
 
 
 def req_1(control):
@@ -153,5 +153,6 @@ def delta_time(start, end):
     elapsed = float(end - start)
     return elapsed
 
-print(load_data(new_controller("ARRAY_LIST"),"Data/DIAN/Salida_agregados_renta_juridicos_AG-small.csv"))
-# print(new_controller("ARRAY_LIST"))
+
+# print(load_data(new_controller("ARRAY_LIST"),"Data/DIAN/Salida_agregados_renta_juridicos_AG-small.csv"))
+# # print(new_controller("ARRAY_LIST"))

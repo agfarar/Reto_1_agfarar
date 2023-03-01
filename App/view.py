@@ -44,7 +44,8 @@ def new_controller():
         Se crea una instancia del controlador
     """
     #TODO: Llamar la función del controlador donde se crean las estructuras de datos
-    pass
+    control=controller.new_controller()
+    return control
 
 
 def print_menu():
@@ -66,9 +67,123 @@ def load_data(control):
     Carga los datos
     """
     #TODO: Realizar la carga de datos
+    data_size=controller.load_data(control)
+    print("- "*15) 
+    print("Loaded service info:\n")
+    print(f'Total loaded titles:{49}\n')
+    print(f'Total loaded features:{data_size}\n')
+    print("- "*15)
+    sorted_array_list=controller.sort(control["model"])
+    sample=3
+    titulos = ["Año","Código actividad económica","Nombre actividad económica","Código sector económico","Nombre sector económico","Código subsector económico","Nombre subsector económico","Total ingresos netos","Total costos y gastos","Total saldo a pagar","Total saldo a favor"]
+    tabulate_table(sorted_array_list, titles = titulos, pos = 1, first_and_last = True,  sample =3, printable= False, tablefmt= "grid", maxcolwidths=13, maxheadercolwidths= 13)
+
+def tabulate_table(table, titles: list, pos: int, first_and_last: bool, sample: int, printable: bool, tablefmt: str, maxcolwidths: int, maxheadercolwidths: int):
     
+    '''table vendria siendo control, esta funcion tabula lo que sea basicamente'''
+    if tablefmt == None:
+    
+        tablefmt = "grid"
+        
+    if maxheadercolwidths == None:
+        
+        maxheadercolwidths = 13
+        
+    if maxcolwidths == None:
+        
+        maxcolwidths = 13
+        
+    if pos == None:
+        
+        pos = 1
+    
+    if sample == None:
+        
+        table = table
+        
+    else:
+        
+        if first_and_last == True:
+        
+            last_table  = lt.subList(table, lt.size(table)- (sample-1), sample)
+            first_table = lt.subList(table, 1, sample)
+            
+        else: 
+            
+            table = lt.subList(table, pos, sample)
+        
+    if first_and_last == False and printable == False:
+        
+        big_table = []
+            
+        for line in lt.iterator(table):
+            
+            tabulated_line = []
+            
+            for title in titles:
+                
+                tabulated_line += [line[title]]
+                
+            big_table += [tabulated_line]
+            
+            print(tabulate(big_table, headers = titles, tablefmt= tablefmt, maxcolwidths= maxcolwidths, maxheadercolwidths= maxheadercolwidths))
+
+    elif first_and_last == True:
+        
+        big_table_first = []
+            
+        for line in lt.iterator(first_table):
+            
+            tabulated_line = []
+            
+            for title in titles:
+                
+                tabulated_line += [line[title]]
+                
+            big_table_first += [tabulated_line]
+            
+        big_table_last = []
+            
+        for line in lt.iterator(last_table):
+            
+            tabulated_line = []
+            
+            for title in titles:
+                
+                tabulated_line += [line[title]]
+                
+            big_table_last += [tabulated_line]
+        
+        print(tabulate(big_table_first, headers = titles, tablefmt= tablefmt, maxcolwidths= maxcolwidths, maxheadercolwidths= maxheadercolwidths))
+        print(tabulate(big_table_last, headers = titles, tablefmt= tablefmt, maxcolwidths= maxcolwidths, maxheadercolwidths= maxheadercolwidths))
+    elif printable == True:
+        
+        big_table = []
+        
+        for anio in table:
+                            
+            line = table.get(anio)
+                            
+            tabulated_line = []
+            
+            for key in line:
+                                    
+                if key in titles:
+                    
+                    tabulated_line += [line.get(key)]
+                    
+                                
+            big_table += [tabulated_line]
+            
+            
+                                
+        print(tabulate(big_table, headers = titles, tablefmt= tablefmt, maxcolwidths= maxcolwidths, maxheadercolwidths= maxheadercolwidths))
 
 
+    else:
+        
+        raise KeyError
+    
 def print_data(control, id):
     """
         Función que imprime un dato dado su ID
