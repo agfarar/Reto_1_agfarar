@@ -47,15 +47,11 @@ def load_data(control:dict):
     Carga los datos del reto
     """
     # TODO: Realizar la carga de datos
-    raw_data = csv.DictReader(open("Data/DIAN/Salida_agregados_renta_juridicos_AG-large.csv", encoding = "utf-8"), delimiter= ",")
+    raw_data = csv.DictReader(open("Data/DIAN/Salida_agregados_renta_juridicos_AG-small.csv", encoding = "utf-8"), delimiter= ",")
     for line in raw_data:
         model.add_data(control,line)
     return model.data_size(control["model"])
-
 # Funciones de ordenamiento
-def compare_function_load_data():
-    pass
-
 def sort(control):
     """
     Ordena los datos del modelo
@@ -95,7 +91,7 @@ def req_3(control):
     Retorna el resultado del requerimiento 3
     """
     # TODO: Modificar el requerimiento 3
-    pass
+    titulos=[]
 
 
 def req_4(control):
