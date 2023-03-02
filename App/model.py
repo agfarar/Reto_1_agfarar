@@ -23,7 +23,7 @@
  *
  * Dario Correal - Version inicial
  """
-
+#[arrlt.addFirst(sup_code_tuple,x['Código actividad económica']) for x in data_structs['model']['data']['elements'] if x['Código actividad económica'] not in sup_code_tuple['elements']]
 
 import config as cf
 from DISClib.ADT import list as lt
@@ -150,29 +150,38 @@ def req_4(data_structs):
     
     #Sumatoria del primero 
     "El total de costos y gastos nómina del subsector económico.:  Sector_economico: Costos y gastos nómina "
-    #SOLO SON 25 sub-sectores economicos
+
     years=('2021', '2020', '2019', '2018', '2017', '2016', '2015', '2014', '2013', '2012')
 
-    sup_code=lt.newList(datastructure='ARRAY_LIST')
-    [arrlt.addFirst(sup_code,x['Código actividad económica']) for x in data_structs['model']['data']['elements'] if x['Código actividad económica'] not in sup_code['elements']]
-    list_ord_by_year_sup_code=lt.newList(datastructure='ARRAY_LIST')
+    codes_sector=('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12')
+
+    codes_sub_sector=('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25')
+
+    list_ord_by_year_and_code=lt.newList(datastructure='ARRAY_LIST')
+
     for year in years:
-        s_code_list_by_year=lt.newList(datastructure='ARRAY_LIST')
-        for s_code in sup_code['elements']:
-            for line in arrlt.iterator(data_structs["model"]["data"]):
-                if line["Año"]==year and line["Código actividad económica"]==s_code:
-                    arrlt.addFirst(s_code_list_by_year,line)
-        s_code_list_by_year['key']=year
-        # arrlt.addFirst(list_ord_by_year_sup_code,s_code_list_by_year)
-        for i_code in range(1,26):
-            pass
-    return list_ord_by_year_sup_code
+        list_by_year=lt.newList(datastructure='ARRAY_LIST')
+        list_by_year['key']=year
+        for code in codes_sector:
 
+            list_by_code=lt.newList(datastructure='ARRAY_LIST')
+            list_by_code['key']=code
 
+            for code_sub in codes_sub_sector:
+                list_by_code_sub=lt.newList(datastructure="ARRAY_LIST")
+                list_by_code_sub['key']=code_sub
 
+                for element in lt.iterator(data_structs['model']['data']):
 
-
-
+                    if element['Año']==year and element['Código sector económico']==code and element['Código subsector económico']==code_sub:
+                            lt.addFirst(list_by_code_sub,element)
+                if list_by_code_sub['size']!=0:
+                    lt.addFirst(list_by_code,list_by_code_sub)
+            if list_by_code['size']!=0:
+                lt.addFirst(list_by_year,list_by_code)
+        lt.addFirst(list_ord_by_year_and_code,list_by_year)
+    return list_ord_by_year_and_code
+ 
 def req_5(data_structs):
     """
     Función que soluciona el requerimiento 5
