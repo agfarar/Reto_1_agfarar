@@ -24,6 +24,7 @@ import config as cf
 import sys
 import controller
 from DISClib.ADT import list as lt
+from DISClib.DataStructures import arraylist as arrlt
 from DISClib.ADT import stack as st
 from DISClib.ADT import queue as qu
 from DISClib.ADT import map as mp
@@ -61,33 +62,37 @@ def print_menu():
     print("8- Ejecutar Requerimiento 7")
     print("9- Ejecutar Requerimiento 8")
     print("0- Salir")
-
+lt.iterator
 
 def load_data(control,sample):
     """
     Carga los datos
     """
     #TODO: Realizar la carga de datos
+    header= ["Año","Código actividad económica","Nombre actividad económica","Código sector económico","Nombre sector económico","Código subsector económico","Nombre subsector económico","Total ingresos netos","Total costos y gastos","Total saldo a pagar","Total saldo a favor"]
     data_size=controller.load_data(control)
-    sorted_array_list=controller.sort(control['model'])['elements']
+    sorted_array_list=controller.sort(control['model'])
     print("- "*20) 
     print("Loaded service info:\n")
     print(f'Total loaded titles:{49}\n')
     print(f'Total loaded features:{data_size}\n')
     print("- "*20)
-    año=[]
-    print(f"There are only {sample} economic activities in ")
-    header= ["Año","Código actividad económica","Nombre actividad económica","Código sector económico","Nombre sector económico","Código subsector económico","Nombre subsector económico","Total ingresos netos","Total costos y gastos","Total saldo a pagar","Total saldo a favor"]
-    print(tabulate_data(sorted_array_list,header))
+
+    years=("2012","2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021")
+    for year in years:
+        mid_list=[]
+        for i in sorted_array_list:
+            if i["Año"]==year:
+                mid_list+=[i]
+        print(tabulate_data(mid_list[:3]+mid_list[-3:], header))
        
-def tabulate_data(data_set, header,sample):
+def tabulate_data(data_set, header):#Si veo optimo utilizo el sample para los demas requerimientos
     data_set_org=[]
-    for i in data_set:
+    for i in data_set["elements"]:
         i=dict([(key,val) for key,val in i.items() if key in header])
         data_set_org.append(i)
     rows=[x.values() for x in data_set_org]
     return tabulate(rows,headers=header,tablefmt='grid',maxcolwidths=13,maxheadercolwidths=13)
-
 
 def print_data(control, id):
     """
