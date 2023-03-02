@@ -155,13 +155,18 @@ def req_4(data_structs):
 
     sup_code=lt.newList(datastructure='ARRAY_LIST')
     [arrlt.addFirst(sup_code,x['Código actividad económica']) for x in data_structs['model']['data']['elements'] if x['Código actividad económica'] not in sup_code['elements']]
-    lista=[]
+    list_ord_by_year_sup_code=lt.newList(datastructure='ARRAY_LIST')
     for year in years:
-        for codigo in sup_code['elements']:
+        s_code_list_by_year=lt.newList(datastructure='ARRAY_LIST')
+        for s_code in sup_code['elements']:
             for line in arrlt.iterator(data_structs["model"]["data"]):
-                if line["Año"]==year and line["Código actividad económica"]==codigo:
-                    lista.append(line)
-    return lista
+                if line["Año"]==year and line["Código actividad económica"]==s_code:
+                    arrlt.addFirst(s_code_list_by_year,line)
+        s_code_list_by_year['key']=year
+        # arrlt.addFirst(list_ord_by_year_sup_code,s_code_list_by_year)
+        for i_code in range(1,26):
+            pass
+    return list_ord_by_year_sup_code
 
 
 

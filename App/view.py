@@ -134,7 +134,9 @@ def print_req_4(control):
 
     #Primera parte del requerimiento 
     headers=['Año','Código sector económico','Nombre sector económico','Código subsector económico','Nombre subsector económico','El total de costos y gastos nómina del subsector económico','El total ingresos netos del subsector económico','El total costos y gastos del subsector económico','El total saldo por pagar del subsector económico']
-    print(controller.req_4(control))
+    lista=controller.req_4(control)
+    return lista
+
 
 def print_req_5(control):
     """
