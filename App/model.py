@@ -27,6 +27,7 @@
 
 import config as cf
 from DISClib.ADT import list as lt
+from DISClib.DataStructures import arraylist as arrlt
 from DISClib.ADT import stack as st
 from DISClib.ADT import queue as qu
 from DISClib.Algorithms.Sorting import shellsort as sa
@@ -42,7 +43,6 @@ dos listas, una para los videos, otra para las categorias de los mismos.
 """
 
 # Construccion de modelos
-
 
 def new_data_structs():
     """
@@ -145,7 +145,27 @@ def req_4(data_structs):
     Función que soluciona el requerimiento 4
     """
     # TODO: Realizar el requerimiento 4
-    pass
+
+    #Primera tabla
+    
+    #Sumatoria del primero 
+    "El total de costos y gastos nómina del subsector económico.:  Sector_economico: Costos y gastos nómina "
+    #SOLO SON 25 sub-sectores economicos
+    years=('2021', '2020', '2019', '2018', '2017', '2016', '2015', '2014', '2013', '2012')
+
+    sup_code=lt.newList(datastructure='ARRAY_LIST')
+    [arrlt.addFirst(sup_code,x['Código actividad económica']) for x in data_structs['model']['data']['elements'] if x['Código actividad económica'] not in sup_code['elements']]
+    lista=[]
+    for year in years:
+        for codigo in sup_code['elements']:
+            for line in arrlt.iterator(data_structs["model"]["data"]):
+                if line["Año"]==year and line["Código actividad económica"]==codigo:
+                    lista.append(line)
+    return lista
+
+
+
+
 
 
 def req_5(data_structs):

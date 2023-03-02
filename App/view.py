@@ -71,7 +71,7 @@ def load_data(control,sample):
     #TODO: Realizar la carga de datos
     header= ["Año","Código actividad económica","Nombre actividad económica","Código sector económico","Nombre sector económico","Código subsector económico","Nombre subsector económico","Total ingresos netos","Total costos y gastos","Total saldo a pagar","Total saldo a favor"]
     data_size=controller.load_data(control)
-    sorted_array_list=controller.sort(control['model'])
+    sorted_array_list=controller.sort(control['model'])["elements"]
     print("- "*20) 
     print("Loaded service info:\n")
     print(f'Total loaded titles:{49}\n')
@@ -88,7 +88,7 @@ def load_data(control,sample):
        
 def tabulate_data(data_set, header):#Si veo optimo utilizo el sample para los demas requerimientos
     data_set_org=[]
-    for i in data_set["elements"]:
+    for i in data_set:
         i=dict([(key,val) for key,val in i.items() if key in header])
         data_set_org.append(i)
     rows=[x.values() for x in data_set_org]
@@ -130,8 +130,11 @@ def print_req_4(control):
         Función que imprime la solución del Requerimiento 4 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 4
-    pass
+    
 
+    #Primera parte del requerimiento 
+    headers=['Año','Código sector económico','Nombre sector económico','Código subsector económico','Nombre subsector económico','El total de costos y gastos nómina del subsector económico','El total ingresos netos del subsector económico','El total costos y gastos del subsector económico','El total saldo por pagar del subsector económico']
+    print(controller.req_4(control))
 
 def print_req_5(control):
     """
