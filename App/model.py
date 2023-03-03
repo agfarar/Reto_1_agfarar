@@ -180,8 +180,67 @@ def req_4(data_structs):
             if list_by_code['size']!=0:
                 lt.addFirst(list_by_year,list_by_code)
         lt.addFirst(list_ord_by_year_and_code,list_by_year)
-    return list_ord_by_year_and_code
- 
+        
+        #Año - codigo- sub_codigo
+    
+#bueno aca la idea es organizar el nuevo diccionario  de acuerdo a los requerimientos 
+    for year in lt.iterator(list_ord_by_year_and_code):
+        list_by_year=lt.newList(datastructure='ARRAY_LIST')
+        list_by_year['key']=year['key']
+        for key_sup in lt.iterator(year):
+            list_by_code=lt.newList(datastructure='ARRAY_LIST')
+            list_by_code['key']=key_sup['key']
+
+            for key_inf in lt.iterator(key_sup):
+                list_by_code_sub=lt.newList(datastructure="ARRAY_LIST")
+                list_by_code_sub['key']=key_inf['key']
+
+                Código_sector_económico=0
+                Nombre_sector_económico=0
+                Código_subsector_económico=0
+                Nombre_subsector_económico=0
+                total_costos_y_gastos_nomina=0
+                total_ingresos_netos_del_subsector_económico=0
+                total_costos_y_gastos_del_subsector_económico=0
+                total_saldo_por_pagar_del_subsector_económico=0
+
+                for element in lt.iterator(key_inf):
+                    Código_sector_económico=0
+                    Nombre_sector_económico=0
+                    Código_subsector_económico=0
+                    Nombre_subsector_económico=0
+                    total_costos_y_gastos_nomina=element['Costos y gastos nómina']
+                    total_ingresos_netos_del_subsector_económico=element['Total ingresos netos']
+                    total_costos_y_gastos_del_subsector_económico=element['Total costos y gastos']
+                    total_saldo_por_pagar_del_subsector_económico=element['Total saldo a pagar']
+
+                
+                    # print(element['Costos y gastos nómina'])
+
+                    # print(elements)#aca es el codigo superior
+                    # for key in lt.iterator(elements):#aca son los subsectores
+                    #     pass
+                    # for key in lt.iterator(elements):#ya se tiene la key superior en comun
+                    #     print(key)#se evalua la key inferior en comun 
+'''
+    Año.
+    • Código sector económico.
+    • Nombre sector económico.
+    • Código subsector económico.
+    • Nombre subsector económico.
+    • El total de costos y gastos nómina del subsector económico.
+    • El total ingresos netos del subsector económico.
+    • El total costos y gastos del subsector económico.
+    • El total saldo por pagar del subsector económico.
+    • El total saldo a favor del subsector económico.
+    • Las tres actividades económicas que menos aportaron y las tres actividades económicas que más
+    aportaron al valor total de costos y gastos de nómina en cada año, en donde cada elemento contendrá la siguiente información:
+    o Códigoactividadeconómica.
+    o Nombreactividadeconómica. o El total costos y gastos nómina. o El total ingresos netos.
+    o El total costos y gastos.
+    o El total saldo por pagar.
+    o El Total saldo a favor.
+ '''
 def req_5(data_structs):
     """
     Función que soluciona el requerimiento 5
