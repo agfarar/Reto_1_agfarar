@@ -195,6 +195,7 @@ def req_4(data_structs):
                 list_by_code_sub=lt.newList(datastructure="ARRAY_LIST")
                 list_by_code_sub['key']=key_inf['key']
 
+                diccionario={}
                 Código_sector_económico=0
                 Nombre_sector_económico=0
                 Código_subsector_económico=0
@@ -205,14 +206,14 @@ def req_4(data_structs):
                 total_saldo_por_pagar_del_subsector_económico=0
 
                 for element in lt.iterator(key_inf):
-                    Código_sector_económico=0
-                    Nombre_sector_económico=0
-                    Código_subsector_económico=0
-                    Nombre_subsector_económico=0
-                    total_costos_y_gastos_nomina=element['Costos y gastos nómina']
-                    total_ingresos_netos_del_subsector_económico=element['Total ingresos netos']
-                    total_costos_y_gastos_del_subsector_económico=element['Total costos y gastos']
-                    total_saldo_por_pagar_del_subsector_económico=element['Total saldo a pagar']
+                    diccionario['Código sector económico']=element['Código sector económico']
+                    diccionario['Nombre sector económico']=element['Nombre sector económico']
+                    diccionario['Código subsector económico']=element['Código subsector económico']
+                    diccionario['Nombre subsector económico']=element['Nombre subsector económico']
+                    diccionario['total costos y gastos nomina']=element['Costos y gastos nómina']
+                    diccionario['total ingresos netos del subsector económico']=element['Total ingresos netos']
+                    diccionario['total costos y gastos del subsector económico']=element['Total costos y gastos']
+                    diccionario['total saldo por pagar del subsector económico']=element['Total saldo a pagar']
 
                 
                     # print(element['Costos y gastos nómina'])
