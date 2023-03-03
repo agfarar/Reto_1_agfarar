@@ -133,7 +133,7 @@ def print_req_4(control):
     
 
     #Primera parte del requerimiento 
-    headers=['Año','Código sector económico','Nombre sector económico','Código subsector económico','Nombre subsector económico','El total de costos y gastos nómina del subsector económico','El total ingresos netos del subsector económico','El total costos y gastos del subsector económico','El total saldo por pagar del subsector económico']
+    headers=['Año','Código sector económico','Nombre sector económico','Código subsector económico','Nombre subsector económico','total de costos y gastos nómina del subsector económico','total ingresos netos del subsector económico','total costos y gastos del subsector económico','total saldo por pagar del subsector económico']
     lista=controller.req_4(control)
     print(lista)
     # for i in lt.iterator(lista):

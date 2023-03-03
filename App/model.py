@@ -184,6 +184,7 @@ def req_4(data_structs):
         #Año - codigo- sub_codigo
     
 #bueno aca la idea es organizar el nuevo diccionario  de acuerdo a los requerimientos 
+    list_ord_by_year_and_code_sum=lt.newList(datastructure="ARRAY_LIST")
     for year in lt.iterator(list_ord_by_year_and_code):
         list_by_year=lt.newList(datastructure='ARRAY_LIST')
         list_by_year['key']=year['key']
@@ -191,38 +192,28 @@ def req_4(data_structs):
             list_by_code=lt.newList(datastructure='ARRAY_LIST')
             list_by_code['key']=key_sup['key']
 
-            for key_inf in lt.iterator(key_sup):
+            for key_inf in lt.iterator(key_sup):#key inferior que tiene  un cojunto de key inferiorres 
                 list_by_code_sub=lt.newList(datastructure="ARRAY_LIST")
                 list_by_code_sub['key']=key_inf['key']
 
-                diccionario={}
-                Código_sector_económico=0
-                Nombre_sector_económico=0
-                Código_subsector_económico=0
-                Nombre_subsector_económico=0
-                total_costos_y_gastos_nomina=0
-                total_ingresos_netos_del_subsector_económico=0
-                total_costos_y_gastos_del_subsector_económico=0
-                total_saldo_por_pagar_del_subsector_económico=0
-
+                diccionario={'Año':year['key'],'Nombre sector económico':None,'Código sector económico':key_sup['key'],'Nombre subsector económico':None,'Código subsector económico':key_inf['key'],'total de costos y gastos nómina del subsector económico':0,'total ingresos netos del subsector económico':0,'total costos y gastos del subsector económico':0,'total saldo por pagar del subsector económico':0}
+                   
                 for element in lt.iterator(key_inf):
-                    diccionario['Código sector económico']=element['Código sector económico']
-                    diccionario['Nombre sector económico']=element['Nombre sector económico']
-                    diccionario['Código subsector económico']=element['Código subsector económico']
-                    diccionario['Nombre subsector económico']=element['Nombre subsector económico']
-                    diccionario['total costos y gastos nomina']=element['Costos y gastos nómina']
-                    diccionario['total ingresos netos del subsector económico']=element['Total ingresos netos']
-                    diccionario['total costos y gastos del subsector económico']=element['Total costos y gastos']
-                    diccionario['total saldo por pagar del subsector económico']=element['Total saldo a pagar']
+                        
+                    diccionario['Nombre sector económico']=element['Nombre sector económico']
+                    diccionario['Nombre subsector económico']=element['Nombre subsector económico']
+                    diccionario['total de costos y gastos nómina del subsector económico']+=int(element['Costos y gastos nómina'])
+                    diccionario['total ingresos netos del subsector económico']+=int(element['Total ingresos netos'])
+                    diccionario['total costos y gastos del subsector económico']+=int(element['Total costos y gastos'])
+                    diccionario['total saldo por pagar del subsector económico']+=int(element['Total saldo a pagar'])
+                lt.addFirst(list_by_code,diccionario)
+            lt.addFirst(list_by_year,list_by_code)
+        lt.addFirst(list_ord_by_year_and_code_sum,list_by_year)
+    
+    return list_ord_by_year_and_code_sum
+            
+ 
 
-                
-                    # print(element['Costos y gastos nómina'])
-
-                    # print(elements)#aca es el codigo superior
-                    # for key in lt.iterator(elements):#aca son los subsectores
-                    #     pass
-                    # for key in lt.iterator(elements):#ya se tiene la key superior en comun
-                    #     print(key)#se evalua la key inferior en comun 
 '''
     Año.
     • Código sector económico.
@@ -291,7 +282,7 @@ def compare(data_1, data_2):
 # Funciones de ordenamiento
 
 
-def sort_criteria(data_1, data_2):
+def sort_criteria(data_1, data_2,id):
     """sortCriteria criterio de ordenamiento para las funciones de ordenamiento
 
     Args:
@@ -302,7 +293,7 @@ def sort_criteria(data_1, data_2):
         _type_: _description_
     """
     #TODO: Crear función comparadora para ordenar
-    return data_1["id"] > data_2["id"]
+    return data_1[id] >=data_2[id]
 
 
 def sort(data_structs):
