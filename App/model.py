@@ -181,12 +181,31 @@ def req_5(data_structs):
     pass
 
 
-def req_6(data_structs):
+def req_6(data_structs,year:str):
     """
     Función que soluciona el requerimiento 6
     """
     # TODO: Realizar el requerimiento 6
-    pass
+    years=('2021', '2020', '2019', '2018', '2017', '2016', '2015', '2014', '2013', '2012')
+    primero=lt.newList(datastructure="ARRAY_LIST")
+
+    for year in years:
+        s_code_list_by_year=lt.newList(datastructure='ARRAY_LIST')
+
+        for s_code in primero['elements']:
+
+            for line in arrlt.iterator(data_structs["model"]["data"]):
+                if line["Año"]==year and line["Código actividad económica"]==s_code:
+                    arrlt.addFirst(s_code_list_by_year,line)
+                    print(s_code_list_by_year)
+
+        s_code_list_by_year['key']=year
+
+        
+        for i_code in range(1,26):
+            #print(s_code_list_by_year)
+            print("no funcionó")
+
 
 
 def req_7(data_structs):
