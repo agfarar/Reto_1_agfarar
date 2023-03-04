@@ -121,7 +121,39 @@ def req_1(data_structs):
     Función que soluciona el requerimiento 1
     """
     # TODO: Realizar el requerimiento 1
-    pass
+    mayor_saldo_anios = {"2012": None, "2013": None, "2014": None, "2015": None, "2016": None, "2017": None, "2018": None, "2019": None, "2020": None, "2021": None}
+    
+    #TODO podrias hacer una sublkista por cada anio y en cada sublista hacer sort por el criterio de total saldo a pagar y escoger el primer elemento
+    for anio in mayor_saldo_anios:
+        
+        mayor = None
+
+        for line in lt.iterator(data_structs):
+            
+            #esta condicion es porq no quiero q me recorra toda la lista si no solo en las q en el anio es el mismo q estoy iterando
+            if line["Año"] == anio:
+                
+                if mayor == None:
+                    
+                    mayor = line
+                    
+                else:
+                    
+                    if line["Total saldo a pagar"] > mayor["Total saldo a pagar"]:
+                        
+                        mayor = line
+                        
+                    else: 
+                        mayor = mayor
+                        
+            
+                
+        mayor_saldo_anios[anio]= mayor
+            
+            #necesito buscar una manera de hacer que pare el recorrido aca sin un break solo el de adentro para q no tenga que recorrer la lista tantas veces.
+        
+    return mayor_saldo_anios
+    
 
 
 def req_2(data_structs):
@@ -209,8 +241,17 @@ def req_4(data_structs):
                 lt.addFirst(list_by_code,diccionario)
             lt.addFirst(list_by_year,list_by_code)
         lt.addFirst(list_ord_by_year_and_code_sum,list_by_year)
-    
-    return list_ord_by_year_and_code_sum
+
+    for year in lt.iterator(list_ord_by_year_and_code):
+        for key_sup in lt.iterator(year):
+            
+            for key_inf in lt.iterator(key_sup):#key inferior que tiene  un cojunto de key inferiorres 
+                   
+                for element in lt.iterator(key_inf):
+                    pass
+
+    sorted_list=quk.sort(data_structs,sort_criteria())
+    return list_ord_by_year_and_code
             
  
 

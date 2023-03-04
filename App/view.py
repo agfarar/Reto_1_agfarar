@@ -71,7 +71,8 @@ def load_data(control,sample):
     #TODO: Realizar la carga de datos
     header= ["Año","Código actividad económica","Nombre actividad económica","Código sector económico","Nombre sector económico","Código subsector económico","Nombre subsector económico","Total ingresos netos","Total costos y gastos","Total saldo a pagar","Total saldo a favor"]
     data_size=controller.load_data(control)
-    sorted_array_list=controller.sort(control['model'])["elements"]
+    sorted_array_list=controller.sort(control['model'])
+    print(sorted_array_list)
     print("- "*20) 
     print("Loaded service info:\n")
     print(f'Total loaded titles:{49}\n')
@@ -81,7 +82,7 @@ def load_data(control,sample):
     years=("2012","2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021")
     for year in years:
         mid_list=[]
-        for i in sorted_array_list:
+        for i in lt.iterator(sorted_array_list):
             if i["Año"]==year:
                 mid_list+=[i]
         print(tabulate_data(mid_list[:3]+mid_list[-3:], header))
@@ -106,7 +107,7 @@ def print_req_1(control):
         Función que imprime la solución del Requerimiento 1 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 1
-    pass
+    return controller.req_1(control)
 
 
 def print_req_2(control):
@@ -114,7 +115,7 @@ def print_req_2(control):
         Función que imprime la solución del Requerimiento 2 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 2
-    pass
+    return controller.req_2(control)
 
 
 def print_req_3(control):
