@@ -151,6 +151,9 @@ def print_req_6(control):
         Función que imprime la solución del Requerimiento 6 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 6
+    headers=['Año','Código sector económico','Nombre sector económico','Código subsector económico','Nombre subsector económico','El total de costos y gastos nómina del subsector económico','El total ingresos netos del subsector económico','El total costos y gastos del subsector económico','El total saldo por pagar del subsector económico']
+    year=input("ingrese el año para el que desea evaluar el total de ingresos netos: ")
+    lista=controller.req_6(control,year)
     pass
 
 
