@@ -143,10 +143,23 @@ def req_2(data_structs):
     """
     Función que soluciona el requerimiento 2
     """
-    # TODO: Realizar el requerimiento 2
-    pass
-
-
+    mayor_saldo_favor_anios = ("2012","2013","2014","2015","2016","2017", "2018", "2019", "2020", "2021")
+    lista=lt.newList(datastructure="ARRAY_LIST")
+    for anio in mayor_saldo_favor_anios:
+        mayor = None
+        for line in lt.iterator(data_structs['model']['data']):
+            #esta condicion es porq no quiero q me recorra toda la lista si no solo en las q en el anio es el mismo q estoy iterando
+            if line["Año"] == anio:
+                if mayor == None:
+                    mayor = line
+                else:
+                    if line["Total saldo a favor"] > mayor["Total saldo a favor"]:
+                        mayor = line
+                    else: 
+                        mayor = mayor
+        lt.addLast(lista,mayor)
+    return lista
+    
 def req_3(data_structs):
     """
     Función que soluciona el requerimiento 3

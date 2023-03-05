@@ -91,7 +91,7 @@ def tabulate_data(data_set, header):#Si veo optimo utilizo el sample para los de
         i=dict([(key,val) for key,val in i.items() if key in header])
         data_set_org.append(i)
     rows=[x.values() for x in data_set_org]
-    return tabulate(rows,headers=header,tablefmt='grid',maxcolwidths=13,maxheadercolwidths=13)
+    print(tabulate(rows,headers=header,tablefmt='grid',maxcolwidths=13,maxheadercolwidths=13))
 
 def print_data(control, id):
     """
@@ -115,7 +115,8 @@ def print_req_2(control):
         Función que imprime la solución del Requerimiento 2 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 2
-    return controller.req_2(control)
+    header= ["Año","Código actividad económica","Nombre actividad económica","Código sector económico","Nombre sector económico","Código subsector económico","Nombre subsector económico","Total ingresos netos","Total costos y gastos","Total saldo a pagar","Total saldo a favor"]
+    return tabulate_data(controller.req_2(control)['elements'],header)
 
 
 def print_req_3(control):
