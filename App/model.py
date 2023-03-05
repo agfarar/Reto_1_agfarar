@@ -121,41 +121,24 @@ def req_1(data_structs):
     Función que soluciona el requerimiento 1
     """
     # TODO: Realizar el requerimiento 1
-    mayor_saldo_anios = {"2012": None, "2013": None, "2014": None, "2015": None, "2016": None, "2017": None, "2018": None, "2019": None, "2020": None, "2021": None}
-    
+    mayor_saldo_anios = ("2012","2013","2014","2015","2016","2017", "2018", "2019", "2020", "2021")
+    lista=lt.newList(datastructure="ARRAY_LIST")
     #TODO podrias hacer una sublkista por cada anio y en cada sublista hacer sort por el criterio de total saldo a pagar y escoger el primer elemento
     for anio in mayor_saldo_anios:
-        
         mayor = None
-
-        for line in lt.iterator(data_structs):
-            
+        for line in lt.iterator(data_structs['model']['data']):
             #esta condicion es porq no quiero q me recorra toda la lista si no solo en las q en el anio es el mismo q estoy iterando
             if line["Año"] == anio:
-                
                 if mayor == None:
-                    
                     mayor = line
-                    
-                else:
-                    
-                    if line["Total saldo a pagar"] > mayor["Total saldo a pagar"]:
-                        
+                else: 
+                    if line["Total saldo a pagar"] > mayor["Total saldo a pagar"]: 
                         mayor = line
-                        
                     else: 
-                        mayor = mayor
-                        
-            
-                
-        mayor_saldo_anios[anio]= mayor
-            
-            #necesito buscar una manera de hacer que pare el recorrido aca sin un break solo el de adentro para q no tenga que recorrer la lista tantas veces.
-        
-    return mayor_saldo_anios
+                        mayor = mayor       
+        lt.addLast(lista,mayor)
+    return lista
     
-
-
 def req_2(data_structs):
     """
     Función que soluciona el requerimiento 2
