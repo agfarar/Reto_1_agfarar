@@ -47,7 +47,7 @@ def load_data(control:dict):
     Carga los datos del reto
     """
     # TODO: Realizar la carga de datos
-    raw_data = csv.DictReader(open("Data/DIAN/Salida_agregados_renta_juridicos_AG-10pct.csv", encoding = "utf-8"), delimiter= ",")
+    raw_data = csv.DictReader(open("Data/DIAN/Salida_agregados_renta_juridicos_AG-small.csv", encoding = "utf-8"), delimiter= ",")
     for line in raw_data:
         model.add_data(control,line)
     return model.data_size(control["model"])
@@ -91,7 +91,7 @@ def req_3(control):
     Retorna el resultado del requerimiento 3
     """
     # TODO: Modificar el requerimiento 3
-    titulos=[]
+    return model.req_3(control)
 
 
 def req_4(control):
@@ -117,20 +117,31 @@ def req_6(control):
     pass
 
 
-def req_7(control):
+def req_7(control, ao, ax, sample):
     """
-    Retorna el resultado del requerimiento 7
+    Retorna el resultado del requerimiento 7, ao anio inicial ax anio final
     """
-    # TODO: Modificar el requerimiento 7
-    pass
+    
+    #Todo se basa en que mi lista me ordene bien todo de menor a mayor
+    lista_ordenada = model.req_7(control["model"]["data"], ao, ax, sample)
+    
+    return lista_ordenada
 
 
-def req_8(control):
+def req_8(control, ao, ax, sample):
     """
     Retorna el resultado del requerimiento 8
     """
     # TODO: Modificar el requerimiento 8
-    pass
+    
+    #Primero se llama a la funcion sublista por anio, esto para simplificar el orden de crecimiento al trabajar de una vez sobre la lista filtrada
+    #con los anios que pidio el usuario
+    sublist_por_anio = model.sublist_por_anio(control["model"]["data"], ao, ax)
+    
+    #Luego de eso ya se llama la funcion 8 pero con la lista reducida
+    req_8 = model.req_8(sublist_por_anio, sample)
+
+    return req_8
 
 
 # Funciones para medir tiempos de ejecucion

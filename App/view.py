@@ -124,8 +124,8 @@ def print_req_3(control):
         Función que imprime la solución del Requerimiento 3 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 3
-    pass
-
+    first_header=["Año", "Codigo sector económico", "Nombre sector económico","Codigo subsector económico","Nombre sector económico","Retenciones del subsector económico","Costos y gastos del subsector económico","Ingresos netos del subsector economico","Saldo a pagar del subsector economico","Saldo a favor del subsector economico"]
+    second_header=["Año","Código actividad económica","Nombre actividad económica","Total retenciones","Total ingresos netos", "Total costos y gastos","Total saldo a pagar","Total saldo a favor"]
 
 def print_req_4(control):
     """
@@ -165,20 +165,114 @@ def print_req_6(control):
 
 def print_req_7(control):
     """
-        Función que imprime la solución del Requerimiento 7 en consola
+        Función que imprime la solución del Requerimiento 7 en consola, sample es el numero de cosas que el usuario quiera imprimri
     """
     # TODO: Imprimir el resultado del requerimiento 7
-    pass
-
+    
+    sample = int(input("Cuantos datos desea imprimir por anio? "))
+    
+    titulos = ["Año","Código actividad económica","Nombre actividad económica", "Código sector económico", "Nombre sector económico", 
+               "Código subsector económico", "Nombre subsector económico", "Total ingresos netos", 
+               "Total costos y gastos", "Total saldo a pagar", "Total saldo a favor"]
+    
+    titulos_fake = ["Año","Código actividad económica","Nombre actividad económica", "Código sector económico", "Nombre sector económico", 
+               "Código subsector económico", "Nombre subsector económico", "Total ingresos netos consolidados para el periodo", 
+               "Total costos y gastos consolidados para el periodo", "Total saldo por pagar consolidados para el periodo", 
+               "Total saldo a favor consolidados para el periodo"]
+    
+    ao = input("Desde que anio quiere imprimir?")
+    
+    ax = input("\n Listo, hasta que anio?")
+    
+    lista_ordenada = controller.req_7(control, ao, ax, sample)
+    
+    #Este es el proceso de tabulacion estandar que siempre hacemos para que se vea la lista linda y ordenada en el tabulate
+    big_table = []
+            
+    for line in lt.iterator(lista_ordenada):
+            
+            tabulated_line = []
+            
+            for title in titulos:
+                
+                tabulated_line += [line[title]]
+                
+            big_table += [tabulated_line]
+            
+    print(tabulate(big_table, headers = titulos_fake, tablefmt= "grid", maxcolwidths= 13, maxheadercolwidths= 13))
 
 def print_req_8(control):
     """
         Función que imprime la solución del Requerimiento 8 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 8
-    pass
+    sample = int(input("Cuantos datos desea imprimir por anio? "))
+    
+    
+    ao = input("Desde que anio quiere imprimir?")
+    
+    ax = input("\n Listo, hasta que anio?")
+    
+    req_8 = controller.req_8(control, ao, ax, sample)
+    
+    listica = req_8[0]
+        
+    titulos = ["Código sector económico", "Nombre sector económico", 
+               "Código subsector económico", "Nombre subsector económico", "Total impuesto a cargo para el subsector", "Total ingresos netos para el subsector", 
+               "Total costos y gastos para el subsector", "Total saldo a pagar para el subsector", "Total saldo a favor para el subsector"]
+    
+  
+    print(tabulate(listica["elements"], headers = titulos, tablefmt= "grid", maxcolwidths= 13, maxheadercolwidths= 13))
+    
+    top_n_por_anio = req_8[1]
+    
+    titulos_subsectores = ["Código actividad económica", "Nombre actividad económica", "Total Impuesto a cargo", "Total ingresos netos", "Total costos y gastos", "Total saldo a pagar", "Total saldo a favor"]
 
+    #Aca recorro cada topn del anio para imprimir por cada anio la lista de top n de ese anio
+    
+    for top in top_n_por_anio:
+        
+        top_del_subsector = top_n_por_anio.get(top)["size"]
+        lista_de_ese_subsector = top_n_por_anio.get(top)
+        
+        #Este condicional es para adecuar el print, para ver si digo que solo hubo n actividades o decir este fue el top n actividades
+        if top_del_subsector == sample:
+            
+            print("Para el subsector ", top, " estas fueron las ", top_del_subsector, " actividades economicas que mas aportaron: ")
 
+            #Este es el proceso de tabulacion estandar que siempre hacemos para que se vea la lista linda y ordenada en el tabulate
+            big_table = []
+        
+            for line in lt.iterator(lista_de_ese_subsector):
+                    
+                    tabulated_line = []
+                    
+                    for title in titulos_subsectores:
+                        
+                        tabulated_line += [line[title]]
+                        
+                    big_table += [tabulated_line]
+                    
+            print(tabulate(big_table, headers = titulos_subsectores, tablefmt= "grid", maxcolwidths= 13, maxheadercolwidths= 13))
+
+        else:
+            
+             print("Para el subsector ", top, " solo hay ", top_del_subsector, " actividades economicas que aportaron: ")
+             
+            #Este es el proceso de tabulacion estandar que siempre hacemos para que se vea la lista linda y ordenada en el tabulate
+             big_table = []
+            
+             for line in lt.iterator(lista_de_ese_subsector):
+                    
+                    tabulated_line = []
+                    
+                    for title in titulos_subsectores:
+                        
+                        tabulated_line += [line[title]]
+                        
+                    big_table += [tabulated_line]
+                    
+             print(tabulate(big_table, headers = titulos_subsectores, tablefmt= "grid", maxcolwidths= 13, maxheadercolwidths= 13))
 # Se crea el controlador asociado a la vista
 control = new_controller()
 

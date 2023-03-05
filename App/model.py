@@ -95,27 +95,6 @@ def data_size(data_structs):
     #TODO: Crear la función para obtener el tamaño de una lista
     return lt.size(data_structs["data"])
 
-def compar_fun_or_load_data(business_1, business_2): 
-    """
-    Devuelve verdadero (True) si el año de impuesto1 es menor que el de impuesto2, en caso de que sean iguales tenga en cuenta el código de la actividad económica, de lo contrario devuelva falso (False).
-    Args:
-    impuesto1: información del primer registro de impuestos que incluye el “Año” y el
-    “Código actividad económica”
-            impuesto2: información del segundo registro de impuestos que incluye el “Año” y el
-            “Código actividad económica”
-    """ 
-    if business_1["Año"] < business_2["Año"]:
-        retorno = True
-    elif business_1["Año"] == business_2["Año"]:
-        if business_1["Código actividad económica"] < business_2["Código actividad económica"]:
-           retorno = True
-        else: 
-            retorno = False
-    else:
-        retorno = False
-        
-    return retorno
-
 def req_1(data_structs):
     """
     Función que soluciona el requerimiento 1
@@ -161,12 +140,70 @@ def req_2(data_structs):
     return lista
     
 def req_3(data_structs):
+    
     """
     Función que soluciona el requerimiento 3
     """
-    # TODO: Realizar el requerimiento 3
-    pass
+    
+    menor_subsector_por_anio = {"2012": [], "2013": [], "2014": [], "2015": [], "2016": [], "2017": [], "2018": [], "2019": [], "2020": [], "2021": []}
 
+    for anio in menor_subsector_por_anio:
+        
+        subsectores = lt.newList("ARRAY_LIST", cmp_subsectores)
+    
+        for line in lt.iterator(data_structs):
+                
+                if line["Año"] == anio:
+                    
+                    subsectores = lt.newList("ARRAY_LIST", cmp_subsectores)
+            
+                    nombre_sub =  line["Nombre subsector económico"] 
+                
+                    presente = lt.isPresent(subsectores, nombre_sub)
+                            
+                    if  presente == 0:
+                                        
+                        #en el subindice 3 es la suma de total retenciones, 4 es ingresos netos, 5 costos y gastos, 6 saldoa pagar, 7 saldo a favor
+                        lt.addLast(subsectores, [anio, line["Código sector económico"], line["Nombre sector económico"], line["Código subsector económico"], nombre_sub ,  int( line["Total retenciones"]  ), int ( line["Total ingresos netos"] ) , int ( line["Total costos y gastos"] ) , int ( line["Total saldo a pagar"] ) , int ( line["Total saldo a favor"] )  ])
+                        
+                    else:
+                        
+                        lt.getElement(subsectores, presente)[5] += int (line["Total retenciones"]  ) 
+                        lt.getElement(subsectores, presente)[6] += int ( line["Total ingresos netos"] ) 
+                        lt.getElement(subsectores, presente)[7] += ( int ( line["Total costos y gastos"] ) )
+                        lt.getElement(subsectores, presente)[8] += ( int ( line["Total saldo a pagar"] ) )
+                        lt.getElement(subsectores, presente)[9] += ( int ( line["Total saldo a favor"] ) )
+                        
+                #Y aca ya tendriamos el dicccionario de cada subsector de ese ano con la suma del total de retenciones
+                
+                primera_vez = True
+                
+                for i in lt.iterator(subsectores):
+                    
+                    if primera_vez == True:
+                        
+                        subsector_minimo = i #aca guarda el nombre de la llave
+                        primera_vez = False
+                        
+                    else:
+                
+                            if i[5] <  subsector_minimo[5]:
+                                    
+                                subsector_minimo = i
+                
+                menor_subsector_por_anio[anio] = subsector_minimo
+        
+    #Aca agregamos el anio en primera posicion, luego corrijo esto para q se haga desde arriba y minimicemos mas ciclos...
+    
+    #ESTO ES PARA FACILITAR LA TABULACION EN VIEW
+    menor_subsector_lista = []
+
+    for anio in menor_subsector_por_anio:
+        
+        menor_subsector_por_anio.get(anio).insert(0, anio)
+        menor_subsector_lista += [menor_subsector_por_anio.get(anio)]
+        
+    return menor_subsector_lista
 
 def req_4(data_structs):
     """
@@ -198,11 +235,20 @@ def req_4(data_structs):
             for code_sub in codes_sub_sector:
                 list_by_code_sub=lt.newList(datastructure="ARRAY_LIST")
                 list_by_code_sub['key']=code_sub
-
+            
                 for element in lt.iterator(data_structs['model']['data']):
+                    total_nomina = 0
+                    total_ingresos = 0
+                    total_costos = 0
+                    total_saldo = 0
 
                     if element['Año']==year and element['Código sector económico']==code and element['Código subsector económico']==code_sub:
-                            lt.addFirst(list_by_code_sub,element)
+                        lt.addFirst(list_by_code_sub,element)
+                        total_nomina += int(element['Costos y gastos nómina'])
+                        total_ingresos += int(element['Total ingresos netos'])
+                        total_costos += int(element['Total costos y gastos'])
+                        total_saldo += int(element['Total saldo a pagar'])
+
                 if list_by_code_sub['size']!=0:
                     lt.addFirst(list_by_code,list_by_code_sub)
             if list_by_code['size']!=0:
@@ -212,39 +258,40 @@ def req_4(data_structs):
         #Año - codigo- sub_codigo
     
 #bueno aca la idea es organizar el nuevo diccionario  de acuerdo a los requerimientos 
-    list_ord_by_year_and_code_sum=lt.newList(datastructure="ARRAY_LIST")
-    for year in lt.iterator(list_ord_by_year_and_code):
-        list_by_year=lt.newList(datastructure='ARRAY_LIST')
-        list_by_year['key']=year['key']
-        for key_sup in lt.iterator(year):
-            list_by_code=lt.newList(datastructure='ARRAY_LIST')
-            list_by_code['key']=key_sup['key']
+    # list_ord_by_year_and_code_sum=lt.newList(datastructure="ARRAY_LIST")
+    # for year in lt.iterator(list_ord_by_year_and_code):
+    #     list_by_year=lt.newList(datastructure='ARRAY_LIST')
+    #     list_by_year['key']=year['key']
+    #     for key_sup in lt.iterator(year):
+    #         list_by_code=lt.newList(datastructure='ARRAY_LIST')
+    #         list_by_code['key']=key_sup['key']
 
-            for key_inf in lt.iterator(key_sup):#key inferior que tiene  un cojunto de key inferiorres 
-                list_by_code_sub=lt.newList(datastructure="ARRAY_LIST")
-                list_by_code_sub['key']=key_inf['key']
+    #         for key_inf in lt.iterator(key_sup):#key inferior que tiene  un cojunto de key inferiorres 
+    #             list_by_code_sub=lt.newList(datastructure="ARRAY_LIST")
+    #             list_by_code_sub['key']=key_inf['key']
 
-                diccionario={'Año':year['key'],'Nombre sector económico':None,'Código sector económico':key_sup['key'],'Nombre subsector económico':None,'Código subsector económico':key_inf['key'],'total de costos y gastos nómina del subsector económico':0,'total ingresos netos del subsector económico':0,'total costos y gastos del subsector económico':0,'total saldo por pagar del subsector económico':0}
+    #             diccionario={'Año':year['key'],'Nombre sector económico':None,'Código sector económico':key_sup['key'],'Nombre subsector económico':None,'Código subsector económico':key_inf['key'],'total de costos y gastos nómina del subsector económico':0,'total ingresos netos del subsector económico':0,'total costos y gastos del subsector económico':0,'total saldo por pagar del subsector económico':0}
                    
-                for element in lt.iterator(key_inf):
+    #             for element in lt.iterator(key_inf):
                         
-                    diccionario['Nombre sector económico']=element['Nombre sector económico']
-                    diccionario['Nombre subsector económico']=element['Nombre subsector económico']
-                    diccionario['total de costos y gastos nómina del subsector económico']+=int(element['Costos y gastos nómina'])
-                    diccionario['total ingresos netos del subsector económico']+=int(element['Total ingresos netos'])
-                    diccionario['total costos y gastos del subsector económico']+=int(element['Total costos y gastos'])
-                    diccionario['total saldo por pagar del subsector económico']+=int(element['Total saldo a pagar'])
-                lt.addFirst(list_by_code,diccionario)
-            lt.addFirst(list_by_year,list_by_code)
-        lt.addFirst(list_ord_by_year_and_code_sum,list_by_year)
+    #                 diccionario['Nombre sector económico']=element['Nombre sector económico']
+    #                 diccionario['Nombre subsector económico']=element['Nombre subsector económico']
+    #                 diccionario['total de costos y gastos nómina del subsector económico']+=int(element['Costos y gastos nómina'])
+    #                 diccionario['total ingresos netos del subsector económico']+=int(element['Total ingresos netos'])
+    #                 diccionario['total costos y gastos del subsector económico']+=int(element['Total costos y gastos'])
+    #                 diccionario['total saldo por pagar del subsector económico']+=int(element['Total saldo a pagar'])
+                
+    #             lt.addFirst(list_by_code,diccionario)
+    #         lt.addFirst(list_by_year,list_by_code)
+    #     lt.addFirst(list_ord_by_year_and_code_sum,list_by_year)
 
-    for year in lt.iterator(list_ord_by_year_and_code):
-        for key_sup in lt.iterator(year):
+    # for year in lt.iterator(list_ord_by_year_and_code):
+    #     for key_sup in lt.iterator(year):
             
-            for key_inf in lt.iterator(key_sup):#key inferior que tiene  un cojunto de key inferiorres 
+    #         for key_inf in lt.iterator(key_sup):#key inferior que tiene  un cojunto de key inferiorres 
                    
-                for element in lt.iterator(key_inf):
-                    pass
+    #             for element in lt.iterator(key_inf):
+    #                 pass
 
     sorted_list=quk.sort(data_structs,sort_criteria())
     return list_ord_by_year_and_code
@@ -286,20 +333,139 @@ def req_6(data_structs):
     pass
 
 
-def req_7(data_structs):
-    """
-    Función que soluciona el requerimiento 7
-    """
-    # TODO: Realizar el requerimiento 7
-    pass
+def req_7(data_structs, ao, ax, sample):
+    
+    '''Función que soluciona el requerimiento 7'''
+    
+    #Antes de meterla al sort tengo q hacer una sublista con los elementos de los anios solamente.
+    
+    posiciones = [0]
+    
+    #Este for me tira las posiciones en las que se cambia de anio, para yo usarlas para hacer sublistas, aca podriamos llamar a la funcion sublist por anio tal vez.
+    primera_vez = True
+    
+    posicion = 0
+    
+    for line in lt.iterator(data_structs):
+        
+        if primera_vez == True:
+            
+            linea_anterior = line
+            primera_vez = False
+            
+        elif line["Año"] != linea_anterior["Año"]:
+            
+            posiciones += [posicion]
+            
+        linea_anterior = line
+            
+        posicion += 1
+        
+    anios_posibles = {"2012": posiciones[0], "2013": posiciones[1], "2014": posiciones[2], "2015": posiciones[3], "2016": posiciones[4], "2017": posiciones[5], "2018": posiciones[6], "2019": posiciones[7], "2020": posiciones[8], "2021": posiciones[9]}
+
+    #Esto me da la posicion correspondiente a cada anio
+  
+    posicion_inicial = anios_posibles.get(ao)
+    
+    #Porq como mi mini for me dice cuando cambio de anio en realidad tengo q hacerlo hasta antes de 2015 osea en 2014 + 1 por ejemplo
+    posfi = int(ax) + 1
+    
+    #Aqui hay q poner antes un if en el view para q metan los anios q son porq si no saca error el get .
+
+    posicion_final = anios_posibles.get(str(posfi))
+    
+    numero_filas = posicion_final - posicion_inicial
+    
+    lista_ordenada = lt.subList(data_structs, posicion_inicial + 1, numero_filas+1)
+    #Aca ya tengo mi sublista desde el anio hasta el otro anio.     
+    
+    lista_por_costos_y_gastos = quk.sort(lista_ordenada, cmp_total_costos_y_gastos)
+    
+    #AQUI HAY Q PONER UN IF SI ES MENOR AL SAMPLE.......para q no sqeu error
+    lista_sampleada = lt.subList(lista_por_costos_y_gastos, 1, sample)
+    
+    lista_sampleada_y_ordeanda_por_anio = quk.sort(lista_sampleada, cmp_total_costos_y_gastos)
+
+    return lista_sampleada_y_ordeanda_por_anio
 
 
-def req_8(data_structs):
+def req_8(data_structs, sample):
     """
     Función que soluciona el requerimiento 8
     """
-    # TODO: Realizar el requerimiento 8
-    pass
+
+    subsectores = lt.newList("ARRAY_LIST", cmp_subsectores)
+    
+    #Recorremos la lista limitada por anios que pasamos desde el controler invocando a la funcion sublist por anio.
+    for line in lt.iterator(data_structs):
+        
+        nombre_sub =  line["Nombre subsector económico"] 
+        
+        presente = lt.isPresent(subsectores, nombre_sub)
+        
+        if  presente == 0:
+            
+            
+            #en el subindice 3 es la suma de total retenciones, 4 es ingresos netos, 5 costos y gastos, 6 saldoa pagar, 7 saldo a favor
+            lt.addLast(subsectores, [line["Código sector económico"], line["Nombre sector económico"], line["Código subsector económico"], nombre_sub ,  int( line["Total Impuesto a cargo"] ), int ( line["Total ingresos netos"] ) , int ( line["Total costos y gastos"] ) , int ( line["Total saldo a pagar"] ) , int ( line["Total saldo a favor"] )  ])
+                        
+        else:
+            
+            lt.getElement(subsectores, presente)[4] += int ( line["Total Impuesto a cargo"] ) 
+            lt.getElement(subsectores, presente)[5] += int ( line["Total ingresos netos"] ) 
+            lt.getElement(subsectores, presente)[6] += ( int ( line["Total costos y gastos"] ) )
+            lt.getElement(subsectores, presente)[7] += ( int ( line["Total saldo a pagar"] ) )
+            lt.getElement(subsectores, presente)[8] += ( int ( line["Total saldo a favor"] ) )
+            
+        #Al final esto nos bota un diccionario con cada subsector y una lista con todas las retencioones ingresos costos y saldos totales.
+        
+    #ACA ES PARA IMPRIMIR LOS N DATOS POR CADA SUBSECTOR 
+    
+    data_sorteada = quk.sort(data_structs, cmp_impuestos_by_subsector)
+        
+    posiciones = posiciones_dado_un_parametro(data_sorteada, "Código subsector económico")
+
+    #Esto sera una lista de un monton de sublistas de dislib
+    actividades_que_mas_aportaron_por_subsector = {}
+        
+    posible = True
+    
+    for pos in range(len(posiciones)):
+        
+        #Este condicional es para que no de lista index out of range,. 
+        if pos == len(posiciones) - 1:
+            
+            posible = False
+
+        if posible == True:
+        
+            if sample > posiciones[pos+1] -  posiciones[pos]:
+                
+                actividades_que_mas_aportaron_por_subsector[lt.getElement(data_sorteada, pos)[ "Nombre subsector económico"]] = lt.subList(data_sorteada, posiciones[pos], posiciones[pos+1] -  posiciones[pos])
+                
+                
+            else:
+        #Aqui crea una llave para cada subsector con el top 3. Saca error si son menos del sample pero no he pdodip solucionarlo
+                actividades_que_mas_aportaron_por_subsector[lt.getElement(data_sorteada, pos)[ "Nombre subsector económico"]] = lt.subList(data_sorteada, posiciones[pos], sample)
+                
+                
+    #Esto es para filtrar solamente los subsectores que esten dentro de los subsectores que ya filtramos.
+    top_n_ordenados = {}
+    
+    for sub in lt.iterator(subsectores):
+        
+        for n in actividades_que_mas_aportaron_por_subsector:
+            
+            if sub[3] == n:
+                
+                top_n_ordenados[n] = actividades_que_mas_aportaron_por_subsector.get(n)
+                #Esto nos devuelve la lista de dislib qeu esta bajo ese nombre subsector en el dict de topnsubsectores
+                
+        
+    #Y actividades que mas aportaron queda ya listo con cada llave siendo el nombre del subsector 
+    # y el valor siendo una sublista de dislib con el N subsectores que mas aportaron
+    
+    return subsectores, top_n_ordenados
 
 
 # Funciones utilizadas para comparar elementos dentro de una lista
@@ -340,4 +506,122 @@ def sort(data_structs):
     #TODO: Crear función de ordenamiento
     return quk.sort(data_structs,compar_fun_or_load_data)
 
+def cmp_subsectores(subsector, diccionario):
+    
+    if subsector > diccionario[1]:
+    
+        return 1
+    
+    elif subsector < diccionario[1]:
+    
+        return -1
+    
+    elif  subsector == diccionario[1]:
+        
+        return 0
 
+def compar_fun_or_load_data(business_1, business_2): 
+    """
+    Devuelve verdadero (True) si el año de impuesto1 es menor que el de impuesto2, en caso de que sean iguales tenga en cuenta el código de la actividad económica, de lo contrario devuelva falso (False).
+    Args:
+    impuesto1: información del primer registro de impuestos que incluye el “Año” y el
+    “Código actividad económica”
+            impuesto2: información del segundo registro de impuestos que incluye el “Año” y el
+            “Código actividad económica”
+    """ 
+    if business_1["Año"] < business_2["Año"]:
+        retorno = True
+    elif business_1["Año"] == business_2["Año"]:
+        if business_1["Código actividad económica"] < business_2["Código actividad económica"]:
+           retorno = True
+        else: 
+            retorno = False
+    else:
+        retorno = False
+        
+    return retorno
+
+def cmp_total_costos_y_gastos(impuesto1, impuesto2):
+    
+     if impuesto1["Año"] < impuesto2["Año"]:
+        
+        retorno = True
+        
+     elif impuesto1["Año"] == impuesto2["Año"]:
+        
+         if impuesto1["Total costos y gastos"] < impuesto2["Total costos y gastos"]:
+        
+           retorno = True
+        
+         else:
+            
+            retorno = False
+            
+     elif impuesto1["Año"] > impuesto2["Año"]:
+        
+        retorno = False
+        
+     return retorno
+def posiciones_dado_un_parametro(data_structs, id:str):
+    
+    '''Esta funcion nos devuelve una lista de posiciones [0, 5, 8, 22] que podemos utilizar para realizar sublistas basados en ellas'''
+
+    posiciones = [0]
+    
+    #Este for me tira las posiciones en las que se cambia de anio, para yo usarlas para hacer sublistas.
+    primera_vez = True
+    
+    posicion = 0
+    
+    for line in lt.iterator(data_structs):
+        
+        if primera_vez == True:
+            
+            linea_anterior = line
+            primera_vez = False
+            
+        elif line[id] != linea_anterior[id]:
+            
+            posiciones += [posicion]
+            
+        linea_anterior = line
+            
+        posicion += 1
+        
+    return posiciones
+def cmp_impuestos_by_subsector(impuesto1, impuesto2): 
+    """
+    Esta funcion sortea por anio, luego por codigo subsector economico de menor a mayor y luego por total impuesto a cargo de mayor a menor
+    esto con el fin de luego junto con la funcion de posiciones poder hacer sublistas de lo que ordenemos con esta funcion y tener el top n de elementos de cada subsector
+    con mayor impuesto a cargo
+    """ 
+    if impuesto1["Año"] < impuesto2["Año"]:
+        
+        retorno = True
+        
+    elif impuesto1["Año"] == impuesto2["Año"]:
+        
+        if impuesto1["Código subsector económico"] < impuesto2["Código subsector económico"]:
+        
+           retorno = True
+           
+        elif impuesto1["Código subsector económico"] == impuesto2["Código subsector económico"]:
+
+           
+           if impuesto1["Total Impuesto a cargo"] > impuesto2["Total Impuesto a cargo"]:
+        
+                retorno = True
+        
+           else:
+            
+                  retorno = False
+        
+        else:
+            
+            retorno = False
+            
+    elif impuesto1["Año"] > impuesto2["Año"]:
+        
+        retorno = False
+        
+    return retorno
