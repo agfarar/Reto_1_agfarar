@@ -1,4 +1,4 @@
-﻿"""
+"""
  * Copyright 2020, Departamento de sistemas y Computación,
  * Universidad de Los Andes
  *
@@ -198,10 +198,7 @@ def req_6(data_structs,year:str):
                 if line["Año"]==year and line["Código actividad económica"]==s_code:
                     arrlt.addFirst(s_code_list_by_year,line)
                     print(s_code_list_by_year)
-
         s_code_list_by_year['key']=year
-
-        
         for i_code in range(1,26):
             #print(s_code_list_by_year)
             print("no funcionó")
