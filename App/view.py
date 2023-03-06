@@ -137,13 +137,7 @@ def print_req_4(control):
     #Primera parte del requerimiento 
     headers=['Año','Código sector económico','Nombre sector económico','Código subsector económico','Nombre subsector económico','total de costos y gastos nómina del subsector económico','total ingresos netos del subsector económico','total costos y gastos del subsector económico','total saldo por pagar del subsector económico']
     lista=controller.req_4(control)
-    print(lista)
-    # for i in lt.iterator(lista):
-    #      if i['key']=='2012':
-    #          for j in lt.iterator(i):
-    #             if j['key']=='8':
-    #                 print(j)
-                
+    print(lista)   
 
 
 
@@ -199,7 +193,7 @@ def print_req_7(control):
                 
             big_table += [tabulated_line]
             
-    print(tabulate(big_table, headers = titulos_fake, tablefmt= "grid", maxcolwidths= 13, maxheadercolwidths= 13))
+    print(tabulate_data(big_table,titulos))
 
 def print_req_8(control):
     """
