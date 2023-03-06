@@ -213,10 +213,10 @@ def sort_ingresos(lst):
 
         if presente==0:
             tupla={"Código actividad económica": orden_sec["Código actividad económica"],"Nombre actividad económica": orden_sec["Nombre actividad económica"],"Total ingresos netos": orden_sec["Total ingresos netos"],"Total costos y gastos": orden_sec["Total costos y gastos"],"Total saldo a pagar": orden_sec["Total saldo a pagar"],"Total saldo a favor": orden_sec["Total saldo a favor"]}
-
+            print(tupla,"TUPLA")
             todo={"Nombre sector económico": orden_sec["Nombre sector económico"],"Código sector económico": orden_sec["Código sector económico"],"Total ingresos netos": orden_sec["Total ingresos netos"],"Total costos y gastos": orden_sec["Total costos y gastos"],"Total saldo a pagar": orden_sec["Total saldo a pagar"],"Total saldo a favor": orden_sec["Total saldo a favor"],
-                  "Subsectores":lt.addLast(sectores[subsectores],{"Nombre subsector económico": orden_sec["Nombre subsector económico"],"Código subsector económico": orden_sec["Código subsector económico"],"Total ingresos netos": orden_sec["Total ingresos netos"],"Total costos y gastos": orden_sec["Total costos y gastos"],"Total saldo a pagar": orden_sec["Total saldo a pagar"],"Total saldo a favor": orden_sec["Total saldo a favor"],
-                  "Actividades":lt.addLast(sectores[subsectores][actividades],tupla)})}
+                  "Subsectores":lt.addLast(sectores["Subsectores"],{"Nombre subsector económico": orden_sec["Nombre subsector económico"],"Código subsector económico": orden_sec["Código subsector económico"],"Total ingresos netos": orden_sec["Total ingresos netos"],"Total costos y gastos": orden_sec["Total costos y gastos"],"Total saldo a pagar": orden_sec["Total saldo a pagar"],"Total saldo a favor": orden_sec["Total saldo a favor"],
+                  "Actividades":lt.addLast(sectores["Subsectores"]["Actividades"],tupla)})}
         
             lt.addLast(sectores,todo)
         else:
