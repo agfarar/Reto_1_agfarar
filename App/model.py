@@ -265,16 +265,16 @@ def req_4(data_structs):
                 list_by_code_sub=lt.newList(datastructure="ARRAY_LIST")
                 list_by_code_sub['key']=key_inf['key']
 
-                diccionario={'Año':year['key'],'Nombre sector económico':None,'Código sector económico':key_sup['key'],'Nombre subsector económico':None,'Código subsector económico':key_inf['key'],'total de costos y gastos nómina del subsector económico':0,'total ingresos netos del subsector económico':0,'total costos y gastos del subsector económico':0,'total saldo por pagar del subsector económico':0}
+                diccionario={'Año':year['key'],'Código sector económico':key_sup['key'],'Nombre sector económico':None,'Código subsector económico':key_inf['key'],'Nombre subsector económico':None,'Total de costos y gastos nómina del subsector económico':0,'Total ingresos netos del subsector económico':0,'Total costos y gastos del subsector económico':0,'Total saldo a favor del subsector económico':0}
                    
                 for element in lt.iterator(key_inf):
                         
                     diccionario['Nombre sector económico']=element['Nombre sector económico']
                     diccionario['Nombre subsector económico']=element['Nombre subsector económico']
-                    diccionario['total de costos y gastos nómina del subsector económico']+=int(element['Costos y gastos nómina'])
-                    diccionario['total ingresos netos del subsector económico']+=int(element['Total ingresos netos'])
-                    diccionario['total costos y gastos del subsector económico']+=int(element['Total costos y gastos'])
-                    diccionario['total saldo por pagar del subsector económico']+=int(element['Total saldo a pagar'])
+                    diccionario['Total de costos y gastos nómina del subsector económico']+=int(element['Costos y gastos nómina'])
+                    diccionario['Total ingresos netos del subsector económico']+=int(element['Total ingresos netos'])
+                    diccionario['Total costos y gastos del subsector económico']+=int(element['Total costos y gastos'])
+                    diccionario['Total saldo a favor del subsector económico']+=int(element['Total saldo a favor'])
             lt.addLast(list_by_year,diccionario)
 
         best_dict=lt.getElement(quk.sort(list_by_year,compare_req4),0)
@@ -287,14 +287,14 @@ def req_4(data_structs):
     for k in range(0,10):
         for i in list_ord_by_year_and_code['elements'][::-1]:
             for j in lt.iterator(i):
-                if j['key']==list_subsector_by_year['elements'][k][0]:#reemplazar por getElement
+                if j['key']==lt.getElement(list_subsector_by_year,k)[0]:
                     for l in lt.iterator(j):
-                        if l['key']==list_subsector_by_year['elements'][k][1]:
+                        if l['key']==lt.getElement(list_subsector_by_year,k)[1]:
                             lt.addFirst(list_higher_aportations,l['elements'])
 
                     
-    return list_ord_by_year_and_code_sum,list_higher_aportations
-    # return list_ord_by_year_and_code_sum
+    return list_ord_by_year_and_code_sum, list_higher_aportations
+
             
 def req_5(data_structs):
     """
@@ -457,7 +457,7 @@ def compare_req4(data_1, data_2):
     Función encargada de comparar dos datos
     """
     #TODO: Crear función comparadora de la lista
-    return int(data_1['total de costos y gastos nómina del subsector económico'])>=int(data_2['total de costos y gastos nómina del subsector económico'])
+    return int(data_1['Total de costos y gastos nómina del subsector económico'])>=int(data_2['Total de costos y gastos nómina del subsector económico'])
 
 # Funciones de ordenamiento
 

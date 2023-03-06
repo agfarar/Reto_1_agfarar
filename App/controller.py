@@ -159,7 +159,3 @@ def delta_time(start, end):
     """
     elapsed = float(end - start)
     return elapsed
-
-
-# print(load_data(new_controller("ARRAY_LIST"),"Data/DIAN/Salida_agregados_renta_juridicos_AG-small.csv"))
-# # print(new_controller("ARRAY_LIST"))

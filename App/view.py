@@ -83,22 +83,22 @@ def load_data(control,sample):
         for i in lt.iterator(sorted_array_list):
             if i["Año"]==year:
                 mid_list+=[i]
-        print(tabulate_data(mid_list[:3]+mid_list[-3:], header))
+        print(tabulate_data(mid_list[:3]+mid_list[-3:],header))
        
-def tabulate_data(data_set, header):#Si veo optimo utilizo el sample para los demas requerimientos
+def tabulate_data(data_set,header):#Si veo optimo utilizo el sample para los demas requerimientos
     data_set_org=[]
     for i in data_set:
         i=dict([(key,val) for key,val in i.items() if key in header])
         data_set_org.append(i)
     rows=[x.values() for x in data_set_org]
-    print(tabulate(rows,headers=header,tablefmt='grid',maxcolwidths=13,maxheadercolwidths=13))
+    print(tabulate(rows,headers=header,tablefmt='grid',stralign='center',numalign='center',maxcolwidths=13,maxheadercolwidths=13))
 
 def print_data(control, id):
     """
         Función que imprime un dato dado su ID
     """
     #TODO: Realizar la función para imprimir un elemento
-    pass
+    return 1
 
 def print_req_1(control):
     """
@@ -106,7 +106,6 @@ def print_req_1(control):
     """
     # TODO: Imprimir el resultado del requerimiento 1
     header= ["Año","Código actividad económica","Nombre actividad económica","Código sector económico","Nombre sector económico","Código subsector económico","Nombre subsector económico","Total ingresos netos","Total costos y gastos","Total saldo a pagar","Total saldo a favor"]
-    # print(tabulate_data(controller.req_1(control),header))
     print(tabulate_data(controller.req_1(control)['elements'],header))
 
 
@@ -121,32 +120,47 @@ def print_req_2(control):
 
 def print_req_3(control):
     """
-        Función que imprime la solución del Requerimiento 3 en consola
+    Función que imprime la solución del Requerimiento 3 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 3
     first_header=["Año", "Codigo sector económico", "Nombre sector económico","Codigo subsector económico","Nombre sector económico","Retenciones del subsector económico","Costos y gastos del subsector económico","Ingresos netos del subsector economico","Saldo a pagar del subsector economico","Saldo a favor del subsector economico"]
     second_header=["Año","Código actividad económica","Nombre actividad económica","Total retenciones","Total ingresos netos", "Total costos y gastos","Total saldo a pagar","Total saldo a favor"]
-
+    return 1
 def print_req_4(control):
     """
         Función que imprime la solución del Requerimiento 4 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 4
     
-
     #Primera parte del requerimiento 
-    headers=['Año','Código sector económico','Nombre sector económico','Código subsector económico','Nombre subsector económico','total de costos y gastos nómina del subsector económico','total ingresos netos del subsector económico','total costos y gastos del subsector económico','total saldo por pagar del subsector económico']
+    header=['Año','Código sector económico','Nombre sector económico','Código subsector económico','Nombre subsector económico','Total de costos y gastos nómina del subsector económico', 'Total ingresos netos del subsector económico', 'Total costos y gastos del subsector económico', 'Total saldo a favor del subsector económico']
+    header_2=['Código actividad económica','Nombre actividad económica', 'Costos y gastos nómina','Total ingresos netos','Total costos y gastos','Total saldo a pagar','Total saldo a favor']
+        
     lista=controller.req_4(control)
-    print(lista)   
+    list_sup_sub_best=lista[0]
+    list_3_activities_best_worst=lista[1]
+    print(tabulate_data(list_sup_sub_best['elements'],header))
 
-
+    years=("2012","2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021")
+    for year in years:
+        mid_list=[]
+        for i in lt.iterator(list_3_activities_best_worst):
+            if i[0]["Año"]==year:
+                mid_list+=[i[0]]
+        if len(mid_list)>=6:
+            #Agregar en que año es y cuandtos elementos hay en la lista
+            print(tabulate_data(mid_list[:3]+mid_list[-3:],header_2))
+        else:
+            print(tabulate_data(mid_list,header_2))
+    
+    
 
 def print_req_5(control):
     """
         Función que imprime la solución del Requerimiento 5 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 5
-    pass
+    return 1
 
 
 def print_req_6(control):
