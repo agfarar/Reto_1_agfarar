@@ -154,8 +154,8 @@ def print_req_6(control):
     headers=['Año','Código sector económico','Nombre sector económico','Código subsector económico','Nombre subsector económico','El total de costos y gastos nómina del subsector económico','El total ingresos netos del subsector económico','El total costos y gastos del subsector económico','El total saldo por pagar del subsector económico']
     year=input("ingrese el año para el que desea evaluar el total de ingresos netos: ")
     lista=controller.req_6(control,year)
+    print(lista)
     return lista
-
 
 
 def print_req_7(control):
