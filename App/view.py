@@ -83,7 +83,10 @@ def load_data(control,sample):
         for i in lt.iterator(sorted_array_list):
             if i["Año"]==year:
                 mid_list+=[i]
-        print(tabulate_data(mid_list[:3]+mid_list[-3:],header))
+        if len(mid_list)>=6:
+            tabulate_data(mid_list[:3]+mid_list[-3:],header)
+        else:
+            tabulate_data(mid_list,header)
        
 def tabulate_data(data_set,header):#Si veo optimo utilizo el sample para los demas requerimientos
     data_set_org=[]
@@ -123,44 +126,69 @@ def print_req_3(control):
     Función que imprime la solución del Requerimiento 3 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 3
-    first_header=["Año", "Codigo sector económico", "Nombre sector económico","Codigo subsector económico","Nombre sector económico","Retenciones del subsector económico","Costos y gastos del subsector económico","Ingresos netos del subsector economico","Saldo a pagar del subsector economico","Saldo a favor del subsector economico"]
-    second_header=["Año","Código actividad económica","Nombre actividad económica","Total retenciones","Total ingresos netos", "Total costos y gastos","Total saldo a pagar","Total saldo a favor"]
-    return 1
+    header=["Año", "Codigo sector económico", "Nombre sector económico","Codigo subsector económico","Nombre sector económico","Total de retenciones del subsector económico","Total ingresos netos del subsector económico","Total costos y gastos del subsector económico","Total saldo por pagar del subsector económico","Total saldo a favor del subsector económico"]
+    header_second=["Código actividad económica","Nombre actividad económica","Total retenciones","Total ingresos netos", "Total costos y gastos","Total saldo a pagar","Total saldo a favor"]
+    lista=controller.req_3(control)
+    list_sup_sub_best=lista[0]
+    list_3_activities_best_worst=lista[1]
+    tabulate_data(list_sup_sub_best['elements'],header)
+
+    for i in lt.iterator(list_3_activities_best_worst):
+        if len(i)>=6:
+            tabulate_data(i[:3]+i[-3:],header_second)
+            print('\n')
+        else:
+            tabulate_data(i,header_second)
+            print('\n')
+
 def print_req_4(control):
     """
         Función que imprime la solución del Requerimiento 4 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 4
-    
-    #Primera parte del requerimiento 
+  
     header=['Año','Código sector económico','Nombre sector económico','Código subsector económico','Nombre subsector económico','Total de costos y gastos nómina del subsector económico', 'Total ingresos netos del subsector económico', 'Total costos y gastos del subsector económico', 'Total saldo a favor del subsector económico']
-    header_2=['Código actividad económica','Nombre actividad económica', 'Costos y gastos nómina','Total ingresos netos','Total costos y gastos','Total saldo a pagar','Total saldo a favor']
+    header_second=['Código actividad económica','Nombre actividad económica', 'Costos y gastos nómina','Total ingresos netos','Total costos y gastos','Total saldo a pagar','Total saldo a favor']
         
     lista=controller.req_4(control)
     list_sup_sub_best=lista[0]
     list_3_activities_best_worst=lista[1]
-    print(tabulate_data(list_sup_sub_best['elements'],header))
+    tabulate_data(list_sup_sub_best['elements'],header)
 
-    years=("2012","2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021")
-    for year in years:
-        mid_list=[]
-        for i in lt.iterator(list_3_activities_best_worst):
-            if i[0]["Año"]==year:
-                mid_list+=[i[0]]
-        if len(mid_list)>=6:
-            #Agregar en que año es y cuandtos elementos hay en la lista
-            print(tabulate_data(mid_list[:3]+mid_list[-3:],header_2))
+    for i in lt.iterator(list_3_activities_best_worst):
+        if len(i)>=6:
+            tabulate_data(i[:3]+i[-3:],header_second)
+            print('\n')
         else:
-            print(tabulate_data(mid_list,header_2))
-    
-    
+            tabulate_data(i,header_second)
+            print('\n')
+
 
 def print_req_5(control):
     """
         Función que imprime la solución del Requerimiento 5 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 5
-    return 1
+    """
+        Función que imprime la solución del Requerimiento 4 en consola
+    """
+    # TODO: Imprimir el resultado del requerimiento 4
+  
+    header=['Año','Código sector económico','Nombre sector económico','Código subsector económico','Nombre subsector económico','Total de descuentos tributarios del subsector económico', 'Total ingresos netos del subsector económico', 'Total costos y gastos del subsector económico', 'Total saldo por pagar del subsector económico','Total saldo a favor del subsector económico']
+    header_second=['Código actividad económica','Nombre actividad económica', 'Costos y gastos nómina','Total ingresos netos','Total costos y gastos','Total saldo a pagar','Total saldo a favor']
+        
+    lista=controller.req_5(control)
+    list_sup_sub_best=lista[0]
+    list_3_activities_best_worst=lista[1]
+    tabulate_data(list_sup_sub_best['elements'],header)
+
+    for i in lt.iterator(list_3_activities_best_worst):
+        if len(i)>=6:
+            tabulate_data(i[:3]+i[-3:],header_second)
+            print('\n')
+        else:
+            tabulate_data(i,header_second)
+            print('\n')
 
 
 def print_req_6(control):
