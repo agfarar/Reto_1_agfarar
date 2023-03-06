@@ -186,18 +186,20 @@ def req_6(data_structs,year:str):
     Función que soluciona el requerimiento 6
     """
     # TODO: Realizar el requerimiento 6
-    final= lt.newList(datastructure="ARRAY_LIST")
+    primero= lt.newList(datastructure="ARRAY_LIST")
     datos=data_structs["model"]["data"]["elements"]
     for iterador in datos:
         if year == iterador["Año"]:
-            lt.addLast(final,iterador)
-    #for actividad in final:
-     #   if actividad['Total ingresos netos'] 
-    #for sectores in final["elements"]:
-     #   quk.sort()
-    #for subsectores in final["elements"]:
+            lt.addLast(primero,iterador)
+    final=sort_ingresos(primero)
     return final
 
+def ordenar_ingresos(valor1,valor2)->bool:
+    if valor1>valor2:
+        return True
+    else:
+        return False
+    
 def sort_ingresos(lst):
 
     sectores=lt.newList(datastructure="ARRAY_LIST")
@@ -210,11 +212,11 @@ def sort_ingresos(lst):
         presente=lt.isPresent(sectores,orden_sec["Nombre sector económico"])
 
         if presente==0:
-            tupla=(orden_sec["Código actividad económica"],orden_sec["Nombre actividad económica"],orden_sec["Total ingresos netos"],orden_sec["Total costos y gastos"],orden_sec["Total saldo a pagar"],orden_sec["Total saldo a favor"])
-            
-            todo=(orden_sec["Nombre sector económico"],orden_sec["Código sector económico"],orden_sec["Total ingresos netos"],orden_sec["Total costos y gastos"],orden_sec["Total saldo a pagar"],orden_sec["Total saldo a favor"],
-                  lt.addLast(sectores[subsectores],(orden_sec["Nombre subsector económico"],orden_sec["Código subsector económico"],orden_sec["Total ingresos netos"],orden_sec["Total costos y gastos"],orden_sec["Total saldo a pagar"],orden_sec["Total saldo a favor"],
-                  lt.addLast(sectores[subsectores][actividades],tupla))))
+            tupla={"Código actividad económica": orden_sec["Código actividad económica"],"Nombre actividad económica": orden_sec["Nombre actividad económica"],"Total ingresos netos": orden_sec["Total ingresos netos"],"Total costos y gastos": orden_sec["Total costos y gastos"],"Total saldo a pagar": orden_sec["Total saldo a pagar"],"Total saldo a favor": orden_sec["Total saldo a favor"]}
+
+            todo={"Nombre sector económico": orden_sec["Nombre sector económico"],"Código sector económico": orden_sec["Código sector económico"],"Total ingresos netos": orden_sec["Total ingresos netos"],"Total costos y gastos": orden_sec["Total costos y gastos"],"Total saldo a pagar": orden_sec["Total saldo a pagar"],"Total saldo a favor": orden_sec["Total saldo a favor"],
+                  "Subsectores":lt.addLast(sectores[subsectores],{"Nombre subsector económico": orden_sec["Nombre subsector económico"],"Código subsector económico": orden_sec["Código subsector económico"],"Total ingresos netos": orden_sec["Total ingresos netos"],"Total costos y gastos": orden_sec["Total costos y gastos"],"Total saldo a pagar": orden_sec["Total saldo a pagar"],"Total saldo a favor": orden_sec["Total saldo a favor"],
+                  "Actividades":lt.addLast(sectores[subsectores][actividades],tupla)})}
         
             lt.addLast(sectores,todo)
         else:
@@ -225,15 +227,20 @@ def sort_ingresos(lst):
             presente_sub= lt.isPresent(sectores[presente],orden_sec["Nombre subsector económico"])
 
             if presente_sub == 0:
-                tupla=(orden_sec["Código actividad económica"],orden_sec["Nombre actividad económica"],orden_sec["Total ingresos netos"],orden_sec["Total costos y gastos"],orden_sec["Total saldo a pagar"],orden_sec["Total saldo a favor"])
-                mitad=(orden_sec["Nombre subsector económico"],orden_sec["Código subsector económico"],orden_sec["Total ingresos netos"],orden_sec["Total costos y gastos"],orden_sec["Total saldo a pagar"],orden_sec["Total saldo a favor"],tupla)
-                lt.addLast(subsectores[presente],mitad)
+                tupla={"Código actividad económica": orden_sec["Código actividad económica"],"Nombre actividad económica": orden_sec["Nombre actividad económica"],"Total ingresos netos": orden_sec["Total ingresos netos"],"Total costos y gastos": orden_sec["Total costos y gastos"],"Total saldo a pagar": orden_sec["Total saldo a pagar"],"Total saldo a favor": orden_sec["Total saldo a favor"]}
+                mitad={"Nombre subsector económico":orden_sec["Nombre subsector económico"],"Código subsector económico": orden_sec["Código subsector económico"],"Total ingresos netos": orden_sec["Total ingresos netos"],"Total costos y gastos": orden_sec["Total costos y gastos"],"Total saldo a pagar": orden_sec["Total saldo a pagar"],"Total saldo a favor": orden_sec["Total saldo a favor"],"Actividades":tupla}
+                lt.addLast(subsectores[presente]["Sectores"],mitad)
             
             else:
                 sectores[presente][presente_sub]["Total ingresos netos"] += orden_sec["Total ingresos netos"]
                 sectores[presente][presente_sub]["Total costos y gastos"] += orden_sec["Total costos y gastos"]
                 sectores[presente][presente_sub]["Total saldo a pagar"] += orden_sec["Total saldo a pagar"]
                 sectores[presente][presente_sub]["Total saldo a favor"] += orden_sec["Total saldo a favor"]
+                tuplita={"Código actividad económica": orden_sec["Código actividad económica"],"Nombre actividad económica": orden_sec["Nombre actividad económica"],"Total ingresos netos": orden_sec["Total ingresos netos"],"Total costos y gastos": orden_sec["Total costos y gastos"],"Total saldo a pagar": orden_sec["Total saldo a pagar"],"Total saldo a favor": orden_sec["Total saldo a favor"]}
+                lt.addLast(sectores[presente][presente_sub]["Actividades"],tuplita)
+                quk.sort(sectores[presente][presente_sub]["Actividades"],ordenar_ingresos)
+    return sectores
+
 
 
 
