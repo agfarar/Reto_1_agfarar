@@ -39,7 +39,6 @@ def new_controller():
      control={'model':model.new_data_structs()}
      return control
 
-
 # Funciones para la carga de datos
 
 def load_data(control:dict):
@@ -59,7 +58,6 @@ def sort(control):
     #TODO: Llamar la función del modelo para ordenar los datos
     return model.sort(control["data"])
 
-
 # Funciones de consulta sobre el catálogo
 
 def get_data(control, id):
@@ -69,14 +67,12 @@ def get_data(control, id):
     #TODO: Llamar la función del modelo para obtener un dato
     return model.get_data(control["model"],id)
 
-
 def req_1(control):
     """
     Retorna el resultado del requerimiento 1
     """
     # TODO: Modificar el requerimiento 1
     return model.req_1(control)
-
 
 def req_2(control):
     """
@@ -85,7 +81,6 @@ def req_2(control):
     # TODO: Modificar el requerimiento 2
     return model.req_2(control)
 
-
 def req_3(control):
     """
     Retorna el resultado del requerimiento 3
@@ -93,14 +88,12 @@ def req_3(control):
     # TODO: Modificar el requerimiento 3
     return model.req_3(control)
 
-
 def req_4(control):
     """
     Retorna el resultado del requerimiento 4
     """
     # TODO: Modificar el requerimiento 4
     return model.req_4(control)
-
 
 def req_5(control):
     """
@@ -126,7 +119,6 @@ def req_7(control, ao, ax, sample):
     lista_ordenada = model.req_7(control["model"]["data"], ao, ax, sample)
     
     return lista_ordenada
-
 
 def req_8(control, ao, ax, sample):
     """

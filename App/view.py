@@ -64,7 +64,7 @@ def print_menu():
     print("0- Salir")
 lt.iterator
 
-def load_data(control,sample):
+def load_data(control):
     """
     Carga los datos
     """
@@ -88,7 +88,7 @@ def load_data(control,sample):
         else:
             tabulate_data(mid_list,header)
 
-def tabulate_data(data_set,header):#Si veo optimo utilizo el sample para los demas requerimientos
+def tabulate_data(data_set,header):
     data_set_org=[]
     for i in data_set:
         i=dict([(key,val) for key,val in i.items() if key in header])
@@ -96,7 +96,7 @@ def tabulate_data(data_set,header):#Si veo optimo utilizo el sample para los dem
     rows=[x.values() for x in data_set_org]
     print(tabulate.tabulate(rows,header,tablefmt='grid',stralign='center',numalign='center',maxcolwidths=13,maxheadercolwidths=13))
 
-def print_req_3_4_5(list,header_second):
+def print_req_3_4_5(list,header_second):#mirar para invertir el print de la tablas pequeñas
 
     #TODO: Realizar la función para imprimir un elemento
     # for i in lt.iterator(list[1]):
@@ -128,7 +128,6 @@ def print_req_1(control):
     header= ["Año","Código actividad económica","Nombre actividad económica","Código sector económico","Nombre sector económico","Código subsector económico","Nombre subsector económico","Total ingresos netos","Total costos y gastos","Total saldo a pagar","Total saldo a favor"]
     print(tabulate_data(controller.req_1(control)['elements'],header))
 
-
 def print_req_2(control):
     """
         Función que imprime la solución del Requerimiento 2 en consola
@@ -136,7 +135,6 @@ def print_req_2(control):
     # TODO: Imprimir el resultado del requerimiento 2
     header= ["Año","Código actividad económica","Nombre actividad económica","Código sector económico","Nombre sector económico","Código subsector económico","Nombre subsector económico","Total ingresos netos","Total costos y gastos","Total saldo a pagar","Total saldo a favor"]
     return tabulate_data(controller.req_2(control)['elements'],header)
-
 
 def print_req_3(control):
     """
@@ -163,7 +161,6 @@ def print_req_4(control):
     print('\n')
     print_req_3_4_5(list,header_second)
 
-
 def print_req_5(control):
     """
         Función que imprime la solución del Requerimiento 5 en consola
@@ -181,17 +178,12 @@ def print_req_5(control):
     print('\n')
     print_req_3_4_5(list,header_second)
     
-
-    
-
-
 def print_req_6(control):
     """
         Función que imprime la solución del Requerimiento 6 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 6
     pass
-
 
 def print_req_7(control):
     """
@@ -204,17 +196,13 @@ def print_req_7(control):
     titulos = ["Año","Código actividad económica","Nombre actividad económica", "Código sector económico", "Nombre sector económico", 
                "Código subsector económico", "Nombre subsector económico", "Total ingresos netos", 
                "Total costos y gastos", "Total saldo a pagar", "Total saldo a favor"]
-    
-    titulos_fake = ["Año","Código actividad económica","Nombre actividad económica", "Código sector económico", "Nombre sector económico", 
-               "Código subsector económico", "Nombre subsector económico", "Total ingresos netos consolidados para el periodo", 
-               "Total costos y gastos consolidados para el periodo", "Total saldo por pagar consolidados para el periodo", 
-               "Total saldo a favor consolidados para el periodo"]
-    
+       
     ao = input("Desde que anio quiere imprimir?")
     
     ax = input("\n Listo, hasta que anio?")
     
     lista_ordenada = controller.req_7(control, ao, ax, sample)
+    print(lista_ordenada)
     
     #Este es el proceso de tabulacion estandar que siempre hacemos para que se vea la lista linda y ordenada en el tabulate
     big_table = []
@@ -252,7 +240,7 @@ def print_req_8(control):
                "Total costos y gastos para el subsector", "Total saldo a pagar para el subsector", "Total saldo a favor para el subsector"]
     
   
-    print(tabulate(listica["elements"], headers = titulos, tablefmt= "grid", maxcolwidths= 13, maxheadercolwidths= 13))
+    print(tabulate.tabulate(listica["elements"], headers = titulos, tablefmt= "grid", maxcolwidths= 13, maxheadercolwidths= 13))
     
     top_n_por_anio = req_8[1]
     
@@ -283,7 +271,7 @@ def print_req_8(control):
                         
                     big_table += [tabulated_line]
                     
-            print(tabulate(big_table, headers = titulos_subsectores, tablefmt= "grid", maxcolwidths= 13, maxheadercolwidths= 13))
+            print(tabulate.tabulate(big_table, headers = titulos_subsectores, tablefmt= "grid", maxcolwidths= 13, maxheadercolwidths= 13))
 
         else:
             
@@ -302,7 +290,8 @@ def print_req_8(control):
                         
                     big_table += [tabulated_line]
                     
-             print(tabulate(big_table, headers = titulos_subsectores, tablefmt= "grid", maxcolwidths= 13, maxheadercolwidths= 13))
+             print(tabulate.tabulate(big_table, headers = titulos_subsectores, tablefmt= "grid", maxcolwidths= 13, maxheadercolwidths= 13))
+             
 # Se crea el controlador asociado a la vista
 control = new_controller()
 
@@ -319,7 +308,7 @@ if __name__ == "__main__":
         try:
             if int(inputs) == 1:
                 print("Cargando información de los archivos ....\n")
-                data = load_data(control,3)
+                data = load_data(control)
             elif int(inputs) == 2:
                 print_req_1(control)
 

@@ -73,7 +73,6 @@ def new_data(id, info):
     data={'id':id,'info':info}
     return data
 
-
 # Funciones de consulta
 
 def get_data(data_structs, id):
@@ -214,6 +213,18 @@ def req_6(data_structs):
     # TODO: Realizar el requerimiento 6
     pass
 
+        
+
+def compare_req3_sub(data_1,data_2):
+    return int(data_1['Total retenciones'])<=int(data_2['Total retenciones'])
+
+def compare_req4_sub(data_1,data_2):
+    return int(data_1['Costos y gastos nómina'])>=int(data_2['Costos y gastos nómina'])
+
+def compare_req5_sub(data_1,data_2):
+    return int(data_1['Descuentos tributarios'])<=int(data_2['Descuentos tributarios'])
+
+#Funciones 7 y 8
 def req_7(data_structs, ao, ax, sample):
     
     '''Función que soluciona el requerimiento 7'''
@@ -347,49 +358,15 @@ def req_8(data_structs, sample):
     
     return subsectores, top_n_ordenados
 
-def compare_req3_sub(data_1,data_2):
-    return int(data_1['Total retenciones'])<=int(data_2['Total retenciones'])
-
-def compare_req4_sub(data_1,data_2):
-    return int(data_1['Costos y gastos nómina'])>=int(data_2['Costos y gastos nómina'])
-
-def compare_req5_sub(data_1,data_2):
-    return int(data_1['Descuentos tributarios'])<=int(data_2['Descuentos tributarios'])
-
-
-
 # Funciones de ordenamiento
-def sort_criteria(data_1, data_2,id):
-    """sortCriteria criterio de ordenamiento para las funciones de ordenamiento
 
-    Args:
-        data1 (_type_): _description_
-        data2 (_type_): _description_
-
-    Returns:
-        _type_: _description_
-    """
-    #TODO: Crear función comparadora para ordenar
-    return data_1[id] >=data_2[id]
 def sort(data_structs):
     """
     Función encargada de ordenar la lista con los datos
     """
     #TODO: Crear función de ordenamiento
     return quk.sort(data_structs,compar_fun_or_load_data)
-def cmp_subsectores(subsector, diccionario):
-    
-    if subsector > diccionario[1]:
-    
-        return 1
-    
-    elif subsector < diccionario[1]:
-    
-        return -1
-    
-    elif  subsector == diccionario[1]:
-        
-        return 0
+
 def compar_fun_or_load_data(business_1, business_2): 
     """
     Devuelve verdadero (True) si el año de impuesto1 es menor que el de impuesto2, en caso de que sean iguales tenga en cuenta el código de la actividad económica, de lo contrario devuelva falso (False).
@@ -410,27 +387,8 @@ def compar_fun_or_load_data(business_1, business_2):
         retorno = False
         
     return retorno
-def cmp_total_costos_y_gastos(impuesto1, impuesto2):
-    
-     if impuesto1["Año"] < impuesto2["Año"]:
-        
-        retorno = True
-        
-     elif impuesto1["Año"] == impuesto2["Año"]:
-        
-         if impuesto1["Total costos y gastos"] < impuesto2["Total costos y gastos"]:
-        
-           retorno = True
-        
-         else:
-            
-            retorno = False
-            
-     elif impuesto1["Año"] > impuesto2["Año"]:
-        
-        retorno = False
-        
-     return retorno
+
+#Funciones Juan
 def posiciones_dado_un_parametro(data_structs, id:str):
     
     '''Esta funcion nos devuelve una lista de posiciones [0, 5, 8, 22] que podemos utilizar para realizar sublistas basados en ellas'''
@@ -458,6 +416,166 @@ def posiciones_dado_un_parametro(data_structs, id:str):
         posicion += 1
         
     return posiciones
+
+#se utiliza en la 8
+def sublist_por_anio(data_structs, ao, ax):
+    
+     '''Esta funcion toma por parametro una estructura de datos, un anio inicial y final y te devuelve una sublista desde ese anio hasta el final'''
+     
+     posiciones = [0]
+    
+    #Este for me tira las posiciones en las que se cambia de anio, para yo usarlas para hacer sublistas.
+     primera_vez = True
+    
+     posicion = 0
+    
+     for line in lt.iterator(data_structs):
+        
+        if primera_vez == True:
+            
+            linea_anterior = line
+            primera_vez = False
+            
+        elif line["Año"] != linea_anterior["Año"]:
+            
+            posiciones += [posicion]
+            
+        linea_anterior = line
+            
+        posicion += 1
+        
+     anios_posibles = {"2012": posiciones[0], "2013": posiciones[1], "2014": posiciones[2], "2015": posiciones[3], "2016": posiciones[4], "2017": posiciones[5], "2018": posiciones[6], "2019": posiciones[7], "2020": posiciones[8], "2021": posiciones[9], "2022": lt.size(data_structs)-1} #2022 no hay pero decimos que es la posicion donde termina el 2021
+
+    #Esto me da la posicion correspondiente a cada anio
+  
+     posicion_inicial = anios_posibles.get(ao)
+    
+    #Porq como mi mini for me dice cuando cambio de anio en realidad tengo q hacerlo hasta antes de 2015 osea en 2014 + 1 por ejemplo
+     posfi = int(ax) + 1
+    
+    #Aqui hay q poner antes un if en el view para q metan los anios q son porq si no saca error el get .
+
+     posicion_final = anios_posibles.get(str(posfi))
+    
+     numero_filas = posicion_final - posicion_inicial
+    
+     lista_de_esos_anios = lt.subList(data_structs, posicion_inicial + 1, numero_filas)
+    
+     return lista_de_esos_anios
+
+#Se utiliza en la 3 para la ultima parte
+def actividades_que_mas_aportaron(data_structs):
+    
+    '''sorte y pasa los primeros 3 actividades y ultimas que mas aportaron por anio'''
+    
+    #Tengo que poner esto con el mismo sortm que se escogio desde el principio o preguntar de nuevo
+    sorted_by_retentions = quk.sort(data_structs, cmp_actividades_economicas_que_mas_aportaron)
+    
+    
+    posiciones = []
+    
+    #Este for me tira las posiciones en las que se cambia de anio, para yo usarlas para hacer sublistas.
+    primera_vez = True
+    
+    posicion = 0
+    
+    for line in lt.iterator(sorted_by_retentions):
+        
+        if primera_vez == True:
+            
+            linea_anterior = line
+            primera_vez = False
+            
+        elif line["Año"] != linea_anterior["Año"]:
+            
+            posiciones += [posicion]
+            
+        posicion += 1
+            
+    
+    #2012 primeros 3, facil es la primera y la otra es la posicion 0 osea la primera posicion donde cambio de anio
+    prim_2012 = lt.subList(sorted_by_retentions, 1, 3)
+    ult_2012 = lt.subList(sorted_by_retentions, posiciones[0]-2, 3)
+    
+    #Ahora sigamos con los demas numeros
+    prim_2013 = lt.subList(sorted_by_retentions, posiciones[1], 3)
+    ult_2013 = lt.subList(sorted_by_retentions, posiciones[2]-2, 3)
+    
+    prim_2014 = lt.subList(sorted_by_retentions, posiciones[2], 3)
+    ult_2014 = lt.subList(sorted_by_retentions, posiciones[3]-2, 3)
+    
+    prim_2015 = lt.subList(sorted_by_retentions, posiciones[3], 3)
+    ult_2015 = lt.subList(sorted_by_retentions, posiciones[4]-2, 3)
+    
+    prim_2016 = lt.subList(sorted_by_retentions, posiciones[4], 3)
+    ult_2016 = lt.subList(sorted_by_retentions, posiciones[5]-2, 3)
+    
+    prim_2017 = lt.subList(sorted_by_retentions, posiciones[5], 3)
+    ult_2017 = lt.subList(sorted_by_retentions, posiciones[6]-2, 3)
+    
+    prim_2018 = lt.subList(sorted_by_retentions, posiciones[6], 3)
+    ult_2018 = lt.subList(sorted_by_retentions, posiciones[7]-2, 3)
+    
+    prim_2019 = lt.subList(sorted_by_retentions, posiciones[7], 3)
+    ult_2019 = lt.subList(sorted_by_retentions, posiciones[8]-2, 3)
+    
+    prim_2020 = lt.subList(sorted_by_retentions, posiciones[8], 3)
+    ult_2020 = lt.subList(sorted_by_retentions, posiciones[9]-2, 3)
+    
+     #2021 ultimos 3, facil es la ultima
+    prim_2021 = lt.subList(sorted_by_retentions, posiciones[9], 3)
+    ult_2021 = lt.subList(sorted_by_retentions, lt.size(sorted_by_retentions) - 2, 3)
+    
+    sublistas = {2012: [prim_2012, ult_2012], 2013: [prim_2013, ult_2013], 2014: [prim_2014, ult_2014], 2015: [prim_2015, ult_2015], 2016: [prim_2016, ult_2016], 2017: [prim_2017, ult_2017], 2018: [prim_2018, ult_2018], 2019: [prim_2019, ult_2019], 2020: [prim_2020, ult_2020], 2021: [prim_2021, ult_2021]}
+
+    return sublistas 
+
+#Sirve para el req 6
+def sublist_anio_especifico(data_structs, anio):
+    
+     '''Esta funcion toma por parametro una estructura de datos, un anio y te devuelve una sublista desde ese anio'''
+         
+     primera_vez = True
+    
+     posicion = 0
+    
+     for line in lt.iterator(data_structs):
+        
+        if primera_vez == True:
+            
+            if line["Año"] == anio:
+                
+                 pos = posicion
+                 
+                 primera_vez = False
+            
+        if primera_vez == False:
+            
+            if line["Año"] == anio:
+                
+                pos_final = posicion
+            
+        posicion += 1
+
+     numero_filas = pos - pos_final
+    
+     lista_de_esos_anios = lt.subList(data_structs, pos + 1, numero_filas)
+    
+     return lista_de_esos_anios
+
+# FUNCIONES DE ORDENAMIENTO
+def sort_criteria(data_1, data_2):
+    """sortCriteria criterio de ordenamiento para las funciones de ordenamiento
+
+    Args:
+        data1 (_type_): _description_
+        data2 (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    return data_1["id"] > data_2["id"]
+
 def cmp_impuestos_by_subsector(impuesto1, impuesto2): 
     """
     Esta funcion sortea por anio, luego por codigo subsector economico de menor a mayor y luego por total impuesto a cargo de mayor a menor
@@ -494,3 +612,124 @@ def cmp_impuestos_by_subsector(impuesto1, impuesto2):
         retorno = False
         
     return retorno
+ 
+ #CMP FUNCTIONS
+ 
+def cmp_impuestos_by_anio_CAE(impuesto1, impuesto2): 
+    """
+    Devuelve verdadero (True) si el año de impuesto1 es menor que el de impuesto2, en caso de que sean iguales tenga en cuenta el código de la actividad económica, de lo contrario devuelva falso (False).
+    Args:
+    impuesto1: información del primer registro de impuestos que incluye el “Año” y el
+    “Código actividad económica”
+            impuesto2: información del segundo registro de impuestos que incluye el “Año” y el
+            “Código actividad económica”
+    """ 
+    if impuesto1["Año"] < impuesto2["Año"]:
+        
+        retorno = True
+        
+    elif impuesto1["Año"] == impuesto2["Año"]:
+        
+        if impuesto1["Código actividad económica"] < impuesto2["Código actividad económica"]:
+        
+           retorno = True
+        
+        else:
+            
+            retorno = False
+            
+    elif impuesto1["Año"] > impuesto2["Año"]:
+        
+        retorno = False
+        
+    return retorno
+
+def cmp_subsectores(subsector, diccionario):
+    
+    if subsector > diccionario[1]:
+    
+        return 1
+    
+    elif subsector < diccionario[1]:
+    
+        return -1
+    
+    elif  subsector == diccionario[1]:
+        
+        return 0
+    
+    pass
+    
+def cmp_subsectores_req_3(subsector, diccionario):
+    
+    if subsector > diccionario[4]:
+    
+        return 1
+    
+    elif subsector < diccionario[4]:
+    
+        return -1
+    
+    elif  subsector == diccionario[4]:
+        
+        return 0
+    
+    pass
+
+def cmp_total_costos_y_gastos(impuesto1, impuesto2):
+    
+     if impuesto1["Año"] < impuesto2["Año"]:
+        
+        retorno = True
+        
+     elif impuesto1["Año"] == impuesto2["Año"]:
+        
+         if impuesto1["Total costos y gastos"] < impuesto2["Total costos y gastos"]:
+        
+           retorno = True
+        
+         else:
+            
+            retorno = False
+            
+     elif impuesto1["Año"] > impuesto2["Año"]:
+        
+        retorno = False
+        
+     return retorno
+ 
+def cmp_actividades_economicas_que_mas_aportaron(impuesto1, impuesto2): 
+    
+    '''Compare function para sortear por anio y dentro de cada anio por retenciones.'''
+
+    
+    if impuesto1["Año"] < impuesto2["Año"]:
+        
+        retorno = True
+        
+    elif impuesto1["Año"] == impuesto2["Año"]:
+        
+        if impuesto1["Total retenciones"] < impuesto2["Total retenciones"]:
+        
+           retorno = True
+        
+        else:
+            
+            retorno = False
+            
+    elif impuesto1["Año"] > impuesto2["Año"]:
+        
+        retorno = False
+        
+    return retorno
+
+def compare(data_1, data_2):
+    """
+    Función encargada de comparar dos datos
+    """
+    if data_1["id"] > data_2["id"]:
+        return 1
+    elif data_1["id"] < data_2["id"]:
+        return -1
+    else:
+        return 0
