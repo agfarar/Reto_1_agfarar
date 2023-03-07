@@ -139,107 +139,8 @@ def req_2(data_structs):
         lt.addLast(lista,mayor)
     return lista
     
-def req_3(data_structs):
-    """
-    Función que soluciona el requerimiento 4
-    """
-    # TODO: Realizar el requerimiento 4
-
-    #Primera tabla
-    
-    #Sumatoria del primero 
-    "El total de costos y gastos nómina del subsector económico.:  Sector_economico: Costos y gastos nómina "
-    list_subsector_by_year=lt.newList(datastructure="ARRAY_LIST")
-    years=('2021', '2020', '2019', '2018', '2017', '2016', '2015', '2014', '2013', '2012')
-
-    codes_sector=('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12')
-
-    codes_sub_sector=('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25')
-
-    list_ord_by_year_and_code=lt.newList(datastructure='ARRAY_LIST')
-
-    for year in years:
-        list_by_year=lt.newList(datastructure='ARRAY_LIST')
-        list_by_year['key']=year
-        for code in codes_sector:
-
-            list_by_code=lt.newList(datastructure='ARRAY_LIST')
-            list_by_code['key']=code
-
-
-            for code_sub in codes_sub_sector:
-                list_by_code_sub=lt.newList(datastructure="ARRAY_LIST")
-                list_by_code_sub['key']=code_sub
-
-                for element in lt.iterator(data_structs['model']['data']):
-   
-                    if element['Año']==year and element['Código sector económico']==code and element['Código subsector económico']==code_sub:
-                        lt.addFirst(list_by_code_sub,element)
-
-                if list_by_code_sub['size']!=0:
-                    #Aca
-                    list_by_code_sub_sort=quk.sort(list_by_code_sub,compare_req3_sub)
-                    lt.addFirst(list_by_code,list_by_code_sub_sort)
-
-            if list_by_code['size']!=0:
-                lt.addFirst(list_by_year,list_by_code)
-        lt.addFirst(list_ord_by_year_and_code,list_by_year)
-        
-        #Año - codigo- sub_codigo
-#bueno aca la idea es organizar el nuevo diccionario  de acuerdo a los requerimientos 
-    list_ord_by_year_and_code_sum=lt.newList(datastructure="ARRAY_LIST")
-    for year in lt.iterator(list_ord_by_year_and_code):
-        list_by_year=lt.newList(datastructure='ARRAY_LIST')
-        list_by_year['key']=year['key']
-        for key_sup in lt.iterator(year):
-            list_by_code=lt.newList(datastructure='ARRAY_LIST')
-            list_by_code['key']=key_sup['key']
-
-            for key_inf in lt.iterator(key_sup):#key inferior que tiene  un cojunto de key inferiorres 
-                list_by_code_sub=lt.newList(datastructure="ARRAY_LIST")
-                list_by_code_sub['key']=key_inf['key']
-
-                diccionario={'Año':year['key'],'Código sector económico':key_sup['key'],'Nombre sector económico':None,'Código subsector económico':key_inf['key'],'Nombre subsector económico':None,'Total de retenciones del subsector económico':0,'Total ingresos netos del subsector económico':0,'Total costos y gastos del subsector económico':0,'Total saldo por pagar del subsector económico':0,'Total saldo a favor del subsector económico':0}
-                   
-                for element in lt.iterator(key_inf):
-                        
-                    diccionario['Nombre sector económico']=element['Nombre sector económico']
-                    diccionario['Nombre subsector económico']=element['Nombre subsector económico']
-                    diccionario['Total de retenciones del subsector económico']+=int(element['Total retenciones'])
-                    diccionario['Total ingresos netos del subsector económico']+=int(element['Total ingresos netos'])
-                    diccionario['Total costos y gastos del subsector económico']+=int(element['Total costos y gastos'])
-                    diccionario['Total saldo por pagar del subsector económico']+=int(element['Total saldo a pagar'])
-                    diccionario['Total saldo a favor del subsector económico']+=int(element['Total saldo a favor'])
-
-            lt.addLast(list_by_year,diccionario)
-
-        best_dict=lt.getElement(quk.sort(list_by_year,compare_req3),0)
-
-        dict_best_key_sup_and_inf=[best_dict['Código sector económico'],best_dict['Código subsector económico']]
-        lt.addFirst(list_subsector_by_year,dict_best_key_sup_and_inf)
-        lt.addFirst(list_ord_by_year_and_code_sum,best_dict)
- #arreglar para que no tenga tantas funciones
-    list_higher_aportations=lt.newList(datastructure="ARRAY_LIST")
-
-
-    for i in range(0,10):
-        for j in list_ord_by_year_and_code['elements'][::-1][i]['elements']:
-            if j['key']==list_subsector_by_year['elements'][i][0]:
-                for k in j['elements']:
-                    if k['key']==list_subsector_by_year['elements'][i][1]:
-                        lt.addLast(list_higher_aportations,k['elements'])
-     
-    return list_ord_by_year_and_code_sum, list_higher_aportations
-
-def req_4(data_structs):
-    """
-    Función que soluciona el requerimiento 4
-    """
-    # TODO: Realizar el requerimiento 4
-
-    #Primera tabla
-    
-    #Sumatoria del primero 
+def req3_4_5(data_structs,compare_function):
+  
     "El total de costos y gastos nómina del subsector económico.:  Sector_economico: Costos y gastos nómina "
     
     years=('2021', '2020', '2019', '2018', '2017', '2016', '2015', '2014', '2013', '2012')
@@ -268,13 +169,13 @@ def req_4(data_structs):
 
             if list_by_code_sub['size']!=0:
 
-                list_by_code_sub_sort=quk.sort(list_by_code_sub,compare_req4_sub)
+                list_by_code_sub_sort=quk.sort(list_by_code_sub,compare_function)
                 lt.addFirst(list_by_year_best_code,lt.firstElement(list_by_code_sub_sort))
                 lt.addFirst(list_by_year,list_by_code_sub_sort)
                 
         if list_by_year['size']!=0:
             lt.addFirst(list_1,list_by_year)
-            best_dict=lt.firstElement(quk.sort(list_by_year_best_code,compare_req4_sub))
+            best_dict=lt.firstElement(quk.sort(list_by_year_best_code,compare_function))
             lt.addFirst(list_subsector_best_dict,best_dict['Código subsector económico'])
             lt.addFirst(list_2,best_dict)
 
@@ -286,105 +187,25 @@ def req_4(data_structs):
 
     return list_2,list_best_aportation
 
-def req_5(data_structs):
+def req_3(data_structs):
+    """
+    Función que soluciona el requerimiento 3
+    """
+    return req3_4_5(data_structs,compare_req3_sub)
+
+def req_4(data_structs):
     """
     Función que soluciona el requerimiento 4
     """
     # TODO: Realizar el requerimiento 4
 
-    #Primera tabla
-    
-    #Sumatoria del primero 
-    "El total de costos y gastos nómina del subsector económico.:  Sector_economico: Costos y gastos nómina "
-    list_subsector_by_year=lt.newList(datastructure="ARRAY_LIST")
-    years=('2021', '2020', '2019', '2018', '2017', '2016', '2015', '2014', '2013', '2012')
+    return req3_4_5(data_structs,compare_req4_sub)
 
-    codes_sector=('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12')
-
-    codes_sub_sector=('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25')
-
-    list_ord_by_year_and_code=lt.newList(datastructure='ARRAY_LIST')
-
-    for year in years:
-        list_by_year=lt.newList(datastructure='ARRAY_LIST')
-        list_by_year['key']=year
-        for code in codes_sector:
-
-            list_by_code=lt.newList(datastructure='ARRAY_LIST')
-            list_by_code['key']=code
-
-
-            for code_sub in codes_sub_sector:
-                list_by_code_sub=lt.newList(datastructure="ARRAY_LIST")
-                list_by_code_sub['key']=code_sub
-
-                for element in lt.iterator(data_structs['model']['data']):
-   
-                    if element['Año']==year and element['Código sector económico']==code and element['Código subsector económico']==code_sub:
-                        lt.addFirst(list_by_code_sub,element)
-
-                if list_by_code_sub['size']!=0:
-                    #Aca
-                    list_by_code_sub_sort=quk.sort(list_by_code_sub,compare_req5_sub)
-                    lt.addFirst(list_by_code,list_by_code_sub_sort)
-
-            if list_by_code['size']!=0:
-                lt.addFirst(list_by_year,list_by_code)
-        lt.addFirst(list_ord_by_year_and_code,list_by_year)
-        
-        #Año - codigo- sub_codigo
-#bueno aca la idea es organizar el nuevo diccionario  de acuerdo a los requerimientos 
-    list_ord_by_year_and_code_sum=lt.newList(datastructure="ARRAY_LIST")
-    for year in lt.iterator(list_ord_by_year_and_code):
-        list_by_year=lt.newList(datastructure='ARRAY_LIST')
-        list_by_year['key']=year['key']
-        for key_sup in lt.iterator(year):
-            list_by_code=lt.newList(datastructure='ARRAY_LIST')
-            list_by_code['key']=key_sup['key']
-
-            for key_inf in lt.iterator(key_sup):#key inferior que tiene  un cojunto de key inferiorres 
-                list_by_code_sub=lt.newList(datastructure="ARRAY_LIST")
-                list_by_code_sub['key']=key_inf['key']
-
-
-                diccionario={'Año':year['key'],'Código sector económico':key_sup['key'],
-                             'Nombre sector económico':None,
-                             'Código subsector económico':key_inf['key'],
-                             'Nombre subsector económico':None,
-                             'Total de descuentos tributarios del subsector económico':0,
-                             'Total ingresos netos del subsector económico':0,
-                             'Total costos y gastos del subsector económico':0,
-                             'Total saldo por pagar del subsector económico':0,
-                             'Total saldo a favor del subsector económico':0}
-                   
-                for element in lt.iterator(key_inf):
-                    
-                    diccionario['Nombre sector económico']=element['Nombre sector económico']
-                    diccionario['Nombre subsector económico']=element['Nombre subsector económico']
-                    diccionario['Total de descuentos tributarios del subsector económico']+=int(element['Descuentos tributarios'])
-                    diccionario['Total ingresos netos del subsector económico']+=int(element['Total ingresos netos'])
-                    diccionario['Total costos y gastos del subsector económico']+=int(element['Total costos y gastos'])
-                    diccionario['Total saldo por pagar del subsector económico']+=int(element['Total saldo a pagar'])
-                    diccionario['Total saldo a favor del subsector económico']+=int(element['Total saldo a favor'])
-            lt.addLast(list_by_year,diccionario)
-
-        best_dict=lt.getElement(quk.sort(list_by_year,compare_req5),0)
-
-        dict_best_key_sup_and_inf=[best_dict['Código sector económico'],best_dict['Código subsector económico']]
-        lt.addFirst(list_subsector_by_year,dict_best_key_sup_and_inf)
-        lt.addFirst(list_ord_by_year_and_code_sum,best_dict)
- #arreglar para que no tenga tantas funciones
-    list_higher_aportations=lt.newList(datastructure="ARRAY_LIST")
-
-
-    for i in range(0,10):
-        for j in list_ord_by_year_and_code['elements'][::-1][i]['elements']:
-            if j['key']==list_subsector_by_year['elements'][i][0]:
-                for k in j['elements']:
-                    if k['key']==list_subsector_by_year['elements'][i][1]:
-                        lt.addLast(list_higher_aportations,k['elements'])
-     
-    return list_ord_by_year_and_code_sum, list_higher_aportations
+def req_5(data_structs):
+    """
+    Función que soluciona el requerimiento 4
+    """
+    return req3_4_5(data_structs,compare_req5_sub)
     
 def req_6(data_structs):
     """
@@ -526,23 +347,16 @@ def req_8(data_structs, sample):
     
     return subsectores, top_n_ordenados
 
-def compare_req4_sub(data_1,data_2):
-    return int(data_1['Costos y gastos nómina'])>=int(data_2['Costos y gastos nómina'])
-
-def compare_req4(data_1, data_2):
-    return int(data_1['Costos y gastos nómina'])>=int(data_2['Costos y gastos nómina'])
-
 def compare_req3_sub(data_1,data_2):
     return int(data_1['Total retenciones'])<=int(data_2['Total retenciones'])
 
-def compare_req3(data_1, data_2):
-    return int(data_1['Total de retenciones del subsector económico'])<=int(data_2['Total de retenciones del subsector económico'])
+def compare_req4_sub(data_1,data_2):
+    return int(data_1['Costos y gastos nómina'])>=int(data_2['Costos y gastos nómina'])
 
 def compare_req5_sub(data_1,data_2):
     return int(data_1['Descuentos tributarios'])<=int(data_2['Descuentos tributarios'])
 
-def compare_req5(data_1, data_2):
-    return int(data_1['Total de descuentos tributarios del subsector económico'])>=int(data_2['Total de descuentos tributarios del subsector económico'])
+
 
 # Funciones de ordenamiento
 def sort_criteria(data_1, data_2,id):
