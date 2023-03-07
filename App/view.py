@@ -29,7 +29,7 @@ from DISClib.ADT import stack as st
 from DISClib.ADT import queue as qu
 from DISClib.ADT import map as mp
 assert cf
-from tabulate import tabulate
+import tabulate
 import traceback
 default_limit = 1000 
 sys.setrecursionlimit(default_limit*10)
@@ -87,14 +87,14 @@ def load_data(control,sample):
             tabulate_data(mid_list[:3]+mid_list[-3:],header)
         else:
             tabulate_data(mid_list,header)
-       
+
 def tabulate_data(data_set,header):#Si veo optimo utilizo el sample para los demas requerimientos
     data_set_org=[]
     for i in data_set:
         i=dict([(key,val) for key,val in i.items() if key in header])
         data_set_org.append(i)
     rows=[x.values() for x in data_set_org]
-    print(tabulate(rows,headers=header,tablefmt='grid',stralign='center',numalign='center',maxcolwidths=13,maxheadercolwidths=13))
+    print(tabulate.tabulate(rows,header,tablefmt='grid',stralign='center',numalign='center',maxcolwidths=13,maxheadercolwidths=13))
 
 def print_data(control, id):
     """
@@ -134,10 +134,12 @@ def print_req_3(control):
     tabulate_data(list_sup_sub_best['elements'],header)
 
     for i in lt.iterator(list_3_activities_best_worst):
-        if len(i)>=6:
-            tabulate_data(i[:3]+i[-3:],header_second)
+        if len(i['elements'])>=6:
+            print(f"The year {i['elements'][0]['Año']} and sub sector {i['key']}: ")
+            tabulate_data(i['elements'][:3]+i['elements'][-3:],header_second)
             print('\n')
         else:
+            print(f"There are only {i['size']} in {i['elements'][0]['Año']} and sub sector{i['key']}")
             tabulate_data(i,header_second)
             print('\n')
 
@@ -146,22 +148,21 @@ def print_req_4(control):
         Función que imprime la solución del Requerimiento 4 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 4
-  
-    header=['Año','Código sector económico','Nombre sector económico','Código subsector económico','Nombre subsector económico','Total de costos y gastos nómina del subsector económico', 'Total ingresos netos del subsector económico', 'Total costos y gastos del subsector económico', 'Total saldo a favor del subsector económico']
-    header_second=['Código actividad económica','Nombre actividad económica', 'Costos y gastos nómina','Total ingresos netos','Total costos y gastos','Total saldo a pagar','Total saldo a favor']
-        
-    lista=controller.req_4(control)
-    print(lista)
-    # list_3_activities_best_worst=lista[1]
-    # tabulate_data(list_sup_sub_best['elements'],header)
-
-    # for i in lt.iterator(list_3_activities_best_worst):
-    #     if len(i)>=6:
-    #         tabulate_data(i[:3]+i[-3:],header_second)
-    #         print('\n')
-    #     else:
-    #         tabulate_data(i,header_second)
-    #         print('\n')
+    list=controller.req_4(control)
+    header=["Año","Código sector económico","Nombre sector económico","Código subsector económico","Nombre subsector económico","Costos y gastos nómina","Total ingresos netos", "Total costos y gastos","Total saldo a pagar","Total saldo a favor"]
+    header_second=["Nombre actividad económica","Costos y gastos nómina","Total ingresos netos", "Total costos y gastos","Total saldo a pagar","Total saldo a favor"]
+    tabulate_data(list[0]['elements'],header)
+    print('\n')
+    
+    for i in lt.iterator(list[1]):
+        if len(i['elements'])>=6:
+            print(f"The year {i['elements'][0]['Año']} and sub sector {i['key']}:")
+            tabulate_data(i['elements'][:3]+i['elements'][-3:],header_second)
+            print('\n')
+        else:
+            print(f"There are only {i['size']} in {i['elements'][0]['Año']} and sub sector {i['key']}:")
+            tabulate_data(i['elements'],header_second)
+            print('\n')
 
 
 def print_req_5(control):
@@ -188,8 +189,8 @@ def print_req_5(control):
             tabulate_data(i[:3]+i[-3:],header_second)
             print('\n')
         else:
-             tabulate_data(i,header_second)
-    #         print('\n')
+            tabulate_data(i,header_second)
+            print('\n')
 
 
 def print_req_6(control):

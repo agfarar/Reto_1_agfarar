@@ -241,12 +241,14 @@ def req_4(data_structs):
     
     #Sumatoria del primero 
     "El total de costos y gastos nómina del subsector económico.:  Sector_economico: Costos y gastos nómina "
-    list_1=lt.newList(datastructure="ARRAY_LIST")
+    
     years=('2021', '2020', '2019', '2018', '2017', '2016', '2015', '2014', '2013', '2012')
 
     codes_sub_sector=('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25')
 
+    list_1=lt.newList(datastructure="ARRAY_LIST")
     list_2=lt.newList(datastructure='ARRAY_LIST')
+    list_subsector_best_dict=lt.newList(datastructure="ARRAY_LIST")
 
     for year in years:
         list_by_year=lt.newList(datastructure='ARRAY_LIST')
@@ -255,12 +257,10 @@ def req_4(data_structs):
         list_by_year_best_code=lt.newList(datastructure='ARRAY_LIST')
         list_by_year_best_code['key']=year
 
+
         for code_sub in codes_sub_sector:
             list_by_code_sub=lt.newList(datastructure="ARRAY_LIST")
             list_by_code_sub['key']=code_sub
-
-            list_by_code_sub_best=lt.newList(datastructure="ARRAY_LIST")
-            list_by_code_sub_best['key']=code_sub
 
             for element in lt.iterator(data_structs['model']['data']):
                 if element['Año']==year and element['Código subsector económico']==code_sub:
@@ -269,18 +269,22 @@ def req_4(data_structs):
             if list_by_code_sub['size']!=0:
 
                 list_by_code_sub_sort=quk.sort(list_by_code_sub,compare_req4_sub)
+                lt.addFirst(list_by_year_best_code,lt.firstElement(list_by_code_sub_sort))
                 lt.addFirst(list_by_year,list_by_code_sub_sort)
                 
         if list_by_year['size']!=0:
-            print(list_by_year)
-            print('\n')
             lt.addFirst(list_1,list_by_year)
+            best_dict=lt.firstElement(quk.sort(list_by_year_best_code,compare_req4_sub))
+            lt.addFirst(list_subsector_best_dict,best_dict['Código subsector económico'])
+            lt.addFirst(list_2,best_dict)
 
-    #     if list_by_code_sub['size']!=0:
-    #         lt.addFirst(list_1,list_by_year)
-    #     # lt.addFirst(list_1,list_by_year)
-    # return list_1
-            
+    list_best_aportation=lt.newList(datastructure='ARRAY_LIST')
+    for i in range(0,10):
+        for j in list_1['elements'][i]['elements']:
+            if j['key']==list_subsector_best_dict['elements'][i]:
+                lt.addFirst(list_best_aportation,j)
+
+    return list_2,list_best_aportation
 
 def req_5(data_structs):
     """
