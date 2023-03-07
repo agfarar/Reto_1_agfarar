@@ -151,17 +151,17 @@ def print_req_4(control):
     header_second=['Código actividad económica','Nombre actividad económica', 'Costos y gastos nómina','Total ingresos netos','Total costos y gastos','Total saldo a pagar','Total saldo a favor']
         
     lista=controller.req_4(control)
-    list_sup_sub_best=lista[0]
-    list_3_activities_best_worst=lista[1]
-    tabulate_data(list_sup_sub_best['elements'],header)
+    print(lista)
+    # list_3_activities_best_worst=lista[1]
+    # tabulate_data(list_sup_sub_best['elements'],header)
 
-    for i in lt.iterator(list_3_activities_best_worst):
-        if len(i)>=6:
-            tabulate_data(i[:3]+i[-3:],header_second)
-            print('\n')
-        else:
-            tabulate_data(i,header_second)
-            print('\n')
+    # for i in lt.iterator(list_3_activities_best_worst):
+    #     if len(i)>=6:
+    #         tabulate_data(i[:3]+i[-3:],header_second)
+    #         print('\n')
+    #     else:
+    #         tabulate_data(i,header_second)
+    #         print('\n')
 
 
 def print_req_5(control):
@@ -178,6 +178,7 @@ def print_req_5(control):
     header_second=['Código actividad económica','Nombre actividad económica', 'Costos y gastos nómina','Total ingresos netos','Total costos y gastos','Total saldo a pagar','Total saldo a favor']
         
     lista=controller.req_5(control)
+
     list_sup_sub_best=lista[0]
     list_3_activities_best_worst=lista[1]
     tabulate_data(list_sup_sub_best['elements'],header)
@@ -187,8 +188,8 @@ def print_req_5(control):
             tabulate_data(i[:3]+i[-3:],header_second)
             print('\n')
         else:
-            tabulate_data(i,header_second)
-            print('\n')
+             tabulate_data(i,header_second)
+    #         print('\n')
 
 
 def print_req_6(control):
