@@ -221,7 +221,7 @@ def print_req_7(control):
                 
             big_table += [tabulated_line]
             
-    print(tabulate(big_table, headers = titulos_fake, tablefmt= "grid", maxcolwidths= 13, maxheadercolwidths= 13))
+    print(tabulate.tabulate(big_table, headers = titulos_fake, tablefmt= "grid", maxcolwidths= 13, maxheadercolwidths= 13))
 def print_req_8(control):
     """
         Función que imprime la solución del Requerimiento 8 en consola
