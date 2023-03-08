@@ -53,8 +53,6 @@ def new_data_structs():
     data_structs={"data":lt.newList(datastructure="ARRAY_LIST")}
     return data_structs
 
-# Funciones para agregar informacion al modelo
-
 def add_data(data_structs, data):
     """
     Función para agregar nuevos elementos a la lista
@@ -63,8 +61,6 @@ def add_data(data_structs, data):
     data_structs=lt.addLast(data_structs["model"]["data"],data)
     return data_structs
 
-# Funciones para creacion de datos
-
 def new_data(id, info):
     """
     Crea una nueva estructura para modelar los datos
@@ -72,8 +68,6 @@ def new_data(id, info):
     #TODO: Crear la función para estructurar los datos
     data={'id':id,'info':info}
     return data
-
-# Funciones de consulta
 
 def get_data(data_structs, id):
     """
@@ -85,7 +79,6 @@ def get_data(data_structs, id):
         data=lt.getElement(data_structs["data"],pos_data)
         return data
     return None
-
 
 def data_size(data_structs):
     """
@@ -213,8 +206,6 @@ def req_6(data_structs):
     # TODO: Realizar el requerimiento 6
     pass
 
-        
-
 def compare_req3_sub(data_1,data_2):
     return int(data_1['Total retenciones'])<=int(data_2['Total retenciones'])
 
@@ -224,19 +215,29 @@ def compare_req4_sub(data_1,data_2):
 def compare_req5_sub(data_1,data_2):
     return int(data_1['Descuentos tributarios'])<=int(data_2['Descuentos tributarios'])
 
-#Funciones 7 y 8
-def req_7(data_structs, sample):
+def req_7(data_structs, ao, ax, sample):
     
     '''Función que soluciona el requerimiento 7'''
-    #ACa llegan los datos ya sublisteados del anio que es
-    
-    lista_por_costos_y_gastos = quk.sort(data_structs, cmp_total_costos_y_gastos)
-    
-    #AQUI HAY Q PONER UN IF SI ES MENOR AL SAMPLE.......para q no sqeu error
+    posiciones = [0]
+    primera_vez = True
+    posicion = 0
+    for line in lt.iterator(data_structs):
+        if primera_vez == True:
+            linea_anterior = line
+            primera_vez = False
+        elif line["Año"] != linea_anterior["Año"]:
+            posiciones += [posicion]
+        linea_anterior = line
+        posicion += 1
+    anios_posibles = {"2012": posiciones[0], "2013": posiciones[1], "2014": posiciones[2], "2015": posiciones[3], "2016": posiciones[4], "2017": posiciones[5], "2018": posiciones[6], "2019": posiciones[7], "2020": posiciones[8], "2021": posiciones[9], "2022": lt.size(data_structs)-1}
+    posicion_inicial = anios_posibles.get(ao)
+    posfi = int(ax) + 1
+    posicion_final = anios_posibles.get(str(posfi))
+    numero_filas = posicion_final - posicion_inicial
+    lista_ordenada = lt.subList(data_structs, posicion_inicial + 1, numero_filas+1)
+    lista_por_costos_y_gastos = quk.sort(lista_ordenada, cmp_total_costos_y_gastos)
     lista_sampleada = lt.subList(lista_por_costos_y_gastos, 1, sample)
-    
     lista_sampleada_y_ordeanda_por_anio = quk.sort(lista_sampleada, cmp_total_costos_y_gastos)
-
     return lista_sampleada_y_ordeanda_por_anio
 
 def req_8(data_structs, sample):
@@ -245,79 +246,35 @@ def req_8(data_structs, sample):
     """
 
     subsectores = lt.newList("ARRAY_LIST", cmp_subsectores)
-    
-    #Recorremos la lista limitada por anios que pasamos desde el controler invocando a la funcion sublist por anio.
     for line in lt.iterator(data_structs):
-        
         nombre_sub =  line["Nombre subsector económico"] 
-        
         presente = lt.isPresent(subsectores, nombre_sub)
-        
         if  presente == 0:
-            
-            
-            #en el subindice 3 es la suma de total retenciones, 4 es ingresos netos, 5 costos y gastos, 6 saldoa pagar, 7 saldo a favor
             lt.addLast(subsectores, [line["Código sector económico"], line["Nombre sector económico"], line["Código subsector económico"], nombre_sub ,  int( line["Total Impuesto a cargo"] ), int ( line["Total ingresos netos"] ) , int ( line["Total costos y gastos"] ) , int ( line["Total saldo a pagar"] ) , int ( line["Total saldo a favor"] )  ])
-                        
         else:
-            
             lt.getElement(subsectores, presente)[4] += int ( line["Total Impuesto a cargo"] ) 
             lt.getElement(subsectores, presente)[5] += int ( line["Total ingresos netos"] ) 
             lt.getElement(subsectores, presente)[6] += ( int ( line["Total costos y gastos"] ) )
             lt.getElement(subsectores, presente)[7] += ( int ( line["Total saldo a pagar"] ) )
             lt.getElement(subsectores, presente)[8] += ( int ( line["Total saldo a favor"] ) )
-            
-        #Al final esto nos bota un diccionario con cada subsector y una lista con todas las retencioones ingresos costos y saldos totales.
-        
-    #ACA ES PARA IMPRIMIR LOS N DATOS POR CADA SUBSECTOR 
-    
-    data_sorteada = quk.sort(data_structs, cmp_impuestos_by_subsector)
-        
+    data_sorteada = quk.sort(data_structs, cmp_impuestos_by_subsector)       
     posiciones = posiciones_dado_un_parametro(data_sorteada, "Código subsector económico")
-
-    #Esto sera una lista de un monton de sublistas de dislib
     actividades_que_mas_aportaron_por_subsector = {}
-        
     posible = True
-    
     for pos in range(len(posiciones)):
-        
-        #Este condicional es para que no de lista index out of range,. 
         if pos == len(posiciones) - 1:
-            
             posible = False
-
         if posible == True:
-        
             if sample > posiciones[pos+1] -  posiciones[pos]:
-                
                 actividades_que_mas_aportaron_por_subsector[lt.getElement(data_sorteada, pos)[ "Nombre subsector económico"]] = lt.subList(data_sorteada, posiciones[pos], posiciones[pos+1] -  posiciones[pos])
-                
-                
             else:
-        #Aqui crea una llave para cada subsector con el top 3. Saca error si son menos del sample pero no he pdodip solucionarlo
                 actividades_que_mas_aportaron_por_subsector[lt.getElement(data_sorteada, pos)[ "Nombre subsector económico"]] = lt.subList(data_sorteada, posiciones[pos], sample)
-                
-                
-    #Esto es para filtrar solamente los subsectores que esten dentro de los subsectores que ya filtramos.
     top_n_ordenados = {}
-    
     for sub in lt.iterator(subsectores):
-        
         for n in actividades_que_mas_aportaron_por_subsector:
-            
-            if sub[3] == n:
-                
+            if sub[3] == n:  
                 top_n_ordenados[n] = actividades_que_mas_aportaron_por_subsector.get(n)
-                #Esto nos devuelve la lista de dislib qeu esta bajo ese nombre subsector en el dict de topnsubsectores
-                
-        
-    #Y actividades que mas aportaron queda ya listo con cada llave siendo el nombre del subsector 
-    # y el valor siendo una sublista de dislib con el N subsectores que mas aportaron
-    
     return subsectores, top_n_ordenados
-
-# Funciones de ordenamiento
 
 def sort(data_structs):
     """
@@ -347,14 +304,12 @@ def compar_fun_or_load_data(business_1, business_2):
         
     return retorno
 
-#Funciones Juan
 def posiciones_dado_un_parametro(data_structs, id:str):
     
     '''Esta funcion nos devuelve una lista de posiciones [0, 5, 8, 22] que podemos utilizar para realizar sublistas basados en ellas'''
 
     posiciones = [0]
     
-    #Este for me tira las posiciones en las que se cambia de anio, para yo usarlas para hacer sublistas.
     primera_vez = True
     
     posicion = 0
@@ -376,14 +331,12 @@ def posiciones_dado_un_parametro(data_structs, id:str):
         
     return posiciones
 
-#se utiliza en la 8
 def sublist_por_anio(data_structs, ao, ax):
     
      '''Esta funcion toma por parametro una estructura de datos, un anio inicial y final y te devuelve una sublista desde ese anio hasta el final'''
      
      posiciones = [0]
     
-    #Este for me tira las posiciones en las que se cambia de anio, para yo usarlas para hacer sublistas.
      primera_vez = True
     
      posicion = 0
@@ -403,17 +356,12 @@ def sublist_por_anio(data_structs, ao, ax):
             
         posicion += 1
         
-     anios_posibles = {"2012": posiciones[0], "2013": posiciones[1], "2014": posiciones[2], "2015": posiciones[3], "2016": posiciones[4], "2017": posiciones[5], "2018": posiciones[6], "2019": posiciones[7], "2020": posiciones[8], "2021": posiciones[9], "2022": lt.size(data_structs)-1} #2022 no hay pero decimos que es la posicion donde termina el 2021
-
-    #Esto me da la posicion correspondiente a cada anio
+     anios_posibles = {"2012": posiciones[0], "2013": posiciones[1], "2014": posiciones[2], "2015": posiciones[3], "2016": posiciones[4], "2017": posiciones[5], "2018": posiciones[6], "2019": posiciones[7], "2020": posiciones[8], "2021": posiciones[9], "2022": lt.size(data_structs)-1} 
   
      posicion_inicial = anios_posibles.get(ao)
     
-    #Porq como mi mini for me dice cuando cambio de anio en realidad tengo q hacerlo hasta antes de 2015 osea en 2014 + 1 por ejemplo
      posfi = int(ax) + 1
-    
-    #Aqui hay q poner antes un if en el view para q metan los anios q son porq si no saca error el get .
-
+   
      posicion_final = anios_posibles.get(str(posfi))
     
      numero_filas = posicion_final - posicion_inicial
@@ -422,8 +370,6 @@ def sublist_por_anio(data_structs, ao, ax):
     
      return lista_de_esos_anios
 
-
-#Sirve para el req 6
 def sublist_anio_especifico(data_structs, anio):
     
      '''Esta funcion toma por parametro una estructura de datos, un anio y te devuelve una sublista desde ese anio'''
@@ -456,7 +402,6 @@ def sublist_anio_especifico(data_structs, anio):
     
      return lista_de_esos_anios
 
-# FUNCIONES DE ORDENAMIENTO
 def sort_criteria(data_1, data_2):
     """sortCriteria criterio de ordenamiento para las funciones de ordenamiento
 
