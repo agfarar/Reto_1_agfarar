@@ -196,13 +196,17 @@ def print_req_7(control):
     titulos = ["Año","Código actividad económica","Nombre actividad económica", "Código sector económico", "Nombre sector económico", 
                "Código subsector económico", "Nombre subsector económico", "Total ingresos netos", 
                "Total costos y gastos", "Total saldo a pagar", "Total saldo a favor"]
-       
+    
+    titulos_fake = ["Año","Código actividad económica","Nombre actividad económica", "Código sector económico", "Nombre sector económico", 
+               "Código subsector económico", "Nombre subsector económico", "Total ingresos netos consolidados para el periodo", 
+               "Total costos y gastos consolidados para el periodo", "Total saldo por pagar consolidados para el periodo", 
+               "Total saldo a favor consolidados para el periodo"]
+    
     ao = input("Desde que anio quiere imprimir?")
     
     ax = input("\n Listo, hasta que anio?")
     
     lista_ordenada = controller.req_7(control, ao, ax, sample)
-    print(lista_ordenada)
     
     #Este es el proceso de tabulacion estandar que siempre hacemos para que se vea la lista linda y ordenada en el tabulate
     big_table = []
@@ -217,8 +221,7 @@ def print_req_7(control):
                 
             big_table += [tabulated_line]
             
-    print(tabulate_data(big_table,titulos))
-
+    print(tabulate.tabulate(big_table, headers = titulos_fake, tablefmt= "grid", maxcolwidths= 13, maxheadercolwidths= 13))
 def print_req_8(control):
     """
         Función que imprime la solución del Requerimiento 8 en consola
