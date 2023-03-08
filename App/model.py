@@ -215,30 +215,18 @@ def compare_req4_sub(data_1,data_2):
 def compare_req5_sub(data_1,data_2):
     return int(data_1['Descuentos tributarios'])<=int(data_2['Descuentos tributarios'])
 
-def req_7(data_structs, ao, ax, sample):
+def req_7(data_structs, sample):
     
     '''Función que soluciona el requerimiento 7'''
-    posiciones = [0]
-    primera_vez = True
-    posicion = 0
-    for line in lt.iterator(data_structs):
-        if primera_vez == True:
-            linea_anterior = line
-            primera_vez = False
-        elif line["Año"] != linea_anterior["Año"]:
-            posiciones += [posicion]
-        linea_anterior = line
-        posicion += 1
-    anios_posibles = {"2012": posiciones[0], "2013": posiciones[1], "2014": posiciones[2], "2015": posiciones[3], "2016": posiciones[4], "2017": posiciones[5], "2018": posiciones[6], "2019": posiciones[7], "2020": posiciones[8], "2021": posiciones[9], "2022": lt.size(data_structs)-1}
-    posicion_inicial = anios_posibles.get(ao)
-    posfi = int(ax) + 1
-    posicion_final = anios_posibles.get(str(posfi))
-    numero_filas = posicion_final - posicion_inicial
-    lista_ordenada = lt.subList(data_structs, posicion_inicial + 1, numero_filas+1)
-    lista_por_costos_y_gastos = quk.sort(lista_ordenada, cmp_total_costos_y_gastos)
+    #ACa llegan los datos ya sublisteados del anio que es
+    
+    lista_por_costos_y_gastos = quk.sort(data_structs, cmp_total_costos_y_gastos)
+    
     lista_sampleada = lt.subList(lista_por_costos_y_gastos, 1, sample)
-    lista_sampleada_y_ordeanda_por_anio = quk.sort(lista_sampleada, cmp_total_costos_y_gastos)
-    return lista_sampleada_y_ordeanda_por_anio
+    
+    lista_sampleada_y_ordenada = quk.sort(lista_sampleada, cmp_impuestos_by_anio_solamente)
+    
+    return lista_sampleada_y_ordenada
 
 def req_8(data_structs, sample):
     """
@@ -544,14 +532,21 @@ def cmp_actividades_economicas_que_mas_aportaron(impuesto1, impuesto2):
         retorno = False
         
     return retorno
-
-def compare(data_1, data_2):
+def cmp_impuestos_by_anio_solamente(impuesto1, impuesto2): 
     """
-    Función encargada de comparar dos datos
-    """
-    if data_1["id"] > data_2["id"]:
-        return 1
-    elif data_1["id"] < data_2["id"]:
-        return -1
+    Devuelve verdadero (True) si el año de impuesto1 es menor que el de impuesto2, en caso de que sean iguales tenga en cuenta el código de la actividad económica, de lo contrario devuelva falso (False).
+    Args:
+    impuesto1: información del primer registro de impuestos que incluye el “Año” y el
+    “Código actividad económica”
+            impuesto2: información del segundo registro de impuestos que incluye el “Año” y el
+            “Código actividad económica”
+    """ 
+    if impuesto1["Año"] < impuesto2["Año"]:
+        
+        retorno = True
+        
     else:
-        return 0
+        
+        retorno = False
+        
+    return retorno

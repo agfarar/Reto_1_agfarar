@@ -113,7 +113,8 @@ def req_7(control, ao, ax, sample):
     """
     
     #Todo se basa en que mi lista me ordene bien todo de menor a mayor
-    lista_ordenada = model.req_7(control["model"]["data"], ao, ax, sample)
+    lista_por_anio = model.sublist_por_anio(control["model"]["data"], ao, ax)
+    lista_ordenada = model.req_7(lista_por_anio, sample)
     
     return lista_ordenada
 
